@@ -8,6 +8,9 @@ mongoose.set('strictQuery', true); //removing deprecating warning
 
 dotenv.config({path: './config.env'});
 
+const cookieParser = require('cookie-parser');
+app.use(cookieParser ());
+
 //MongoDB
 require('./db/conn');
 

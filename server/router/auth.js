@@ -88,9 +88,9 @@ router.post('/login', async (req, res) => {
 //About Us Page
 
 //router.get(path, callback)
-router.get('/tool', authenticate, (req, res) => {
-    console.log("My evaluator tool us page");
-    res.send('Hello Evaluator');
+router.get('/profile', authenticate, (req, res) => {
+    console.log("My profile page");
+    res.send(req.rootUser);
 });
 
 
