@@ -1,0 +1,117 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.font-link {
+  font-family: 'Montserrat', sans-serif;
+  
+}
+
+.nav-back {
+  background-color: rgb(212, 78, 106);
+}
+
+.signup{
+  height: fit-content;
+}
+
+.login{
+}
+
+.signupcontainer{
+  box-shadow:  0 0 15px rgb(214, 103, 127);
+  border-radius: 25px;
+  margin: auto;
+  padding: 1%;
+  width: 65%;
+  height: 80%;
+  text-align: center;
+  
+}
+
+.form-floating input[type="email"], .form-floating input[type="password"],.form-floating input[type="name"],.form-floating input[type="phone"],.form-floating input[type="cpassword"],.form-floating input[type="company"] {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  box-shadow: none;
+  border-color: rgb(212, 78, 106);
+  text-indent: 10%;
+  height: 65px;
+}
+
+.btnSignup{
+  margin-right: 85%;
+  margin-top: 5%;
+  width: 20%;
+  border: none;
+  height: 50px;
+  border-radius: 10px;
+  background-color: rgb(212, 78, 106);
+}
+
+.form-title{
+  font-weight: 800;
+}
+
+a {
+  color: rgb(212, 78, 106);
+}
+
+.home-page{
+  background-image: linear-gradient(180deg, rgb(212,78,106), white);
+  height: 90vh;
+}
+
+.home-div{
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pt-5{
+  text-align: center;
+  font-weight: bold;
+  font-size: large;
+}
+
+.home-h1{
+  text-align: center;
+  font-weight: bolder;
+}
