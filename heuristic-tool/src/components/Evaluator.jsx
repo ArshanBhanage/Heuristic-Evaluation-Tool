@@ -1,26 +1,20 @@
 import React, { useState } from "react";
-import { Form, Row, Col, Button } from "react-bootstrap";
+//import { Form, Row, Col, Button } from "react-bootstrap";
 
-function Evaluator() {
-  const [formData, setFormData] = useState({
-    question1: "",
-    question2: "",
-    question3: "",
-  });
-
+const Evaluator = () => {
   const [scores, setScores] = useState({
     question1: 0,
     question2: 0,
     question3: 0,
   });
 
-  const handleRadioChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
+  const handleOptionChange = (e) => {
     switch (e.target.name) {
       case "question1":
         if (e.target.value === "option1") {
           setScores({ ...scores, question1: 1 });
+        } else if (e.target.value === "option2") {
+          setScores({ ...scores, question1: 0.5 });
         } else {
           setScores({ ...scores, question1: 0 });
         }
@@ -28,6 +22,8 @@ function Evaluator() {
       case "question2":
         if (e.target.value === "option1") {
           setScores({ ...scores, question2: 1 });
+        } else if (e.target.value === "option2") {
+          setScores({ ...scores, question2: 0.5 });
         } else {
           setScores({ ...scores, question2: 0 });
         }
@@ -35,6 +31,8 @@ function Evaluator() {
       case "question3":
         if (e.target.value === "option1") {
           setScores({ ...scores, question3: 1 });
+        } else if (e.target.value === "option2") {
+          setScores({ ...scores, question3: 0.5 });
         } else {
           setScores({ ...scores, question3: 0 });
         }
@@ -43,127 +41,106 @@ function Evaluator() {
         break;
     }
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    const sum = Object.values(scores).reduce((acc, score) => acc + score, 0);
+    // Save the sum to a database or display it on the page
+    console.log(sum);
   };
 
   return (
-    <Form className="questionnaire" onSubmit={handleSubmit}>
-      <Form.Group as={Row} controlId="formQuestion1">
-        <Form.Label column sm={2}>
-          Question 1
-        </Form.Label>
-        <Col sm={10}>
-          <Form.Check
-            type="radio"
-            label="Option 1"
-            name="question1"
-            value="option1"
-            onChange={handleRadioChange}
-            checked={formData.question1 === "option1"}
-            required
-          />
-          <Form.Check
-            type="radio"
-            label="Option 2"
-            name="question1"
-            value="option2"
-            onChange={handleRadioChange}
-            checked={formData.question1 === "option2"}
-            required
-          />
-          <Form.Check
-            type="radio"
-            label="Option 3"
-            name="question1"
-            value="option3"
-            onChange={handleRadioChange}
-            checked={formData.question1 === "option3"}
-            required
-          />
-        </Col>
-      </Form.Group>
-
-      <Form.Group as={Row} controlId="formQuestion2">
-        <Form.Label column sm={2}>
-          Question 2
-        </Form.Label>
-        <Col sm={10}>
-          <Form.Check
-            type="radio"
-            label="Option 1"
-            name="question2"
-            value="option1"
-            onChange={handleRadioChange}
-            checked={formData.question2 === "option1"}
-            required
-          />
-          <Form.Check
-            type="radio"
-            label="Option 2"
-            name="question2"
-            value="option2"
-            onChange={handleRadioChange}
-            checked={formData.question2 === "option2"}
-            required
-          />
-          <Form.Check
-            type="radio"
-            label="Option 3"
-            name="question2"
-            value="option3"
-            onChange={handleRadioChange}
-            checked={formData.question2 === "option3"}
-            required
-          />
-        </Col>
-      </Form.Group>
-
-      <Form.Group as={Row} controlId="formQuestion3">
-        <Form.Label column sm={2}>
-          Question 3
-        </Form.Label>
-        <Col sm={10}>
-          <Form.Check
-            type="radio"
-            label="Option 1"
-            name="question3"
-            value="option1"
-            onChange={handleRadioChange}
-            checked={formData.question3 === "option1"}
-            required
-              />
-              <Form.Check
-                type="radio"
-                label="Option 2"
-                name="question3"
-                value="option2"
-                onChange={handleRadioChange}
-                checked={formData.question3 === "option2"}
-                required
-              />
-              <Form.Check
-                type="radio"
-                label="Option 3"
-                name="question3"
-                value="option3"
-                onChange={handleRadioChange}
-                checked={formData.question3 === "option3"}
-                required
-              />
-            </Col>
-          </Form.Group>
-    
-          <Form.Group as={Row}>
-            <Col sm={{ span: 10, offset: 2 }}>
-              <Button type="submit">Submit</Button>
-            </Col>
-          </Form.Group>
-        </Form>
-      );
-    }
+    <div className="quiz-container col-md-auto ">
+      <form onSubmit={handleSubmit}>
+      <h3>Question 1</h3>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question1"
+          value="option1"
+          onChange={handleOptionChange}
+        />
+        Option 1 (1 point)
+      </div>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question1"
+          value="option2"
+          onChange={handleOptionChange}
+        />
+        Option 2 (0.5 points)
+      </div>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question1"
+          value="option3"
+          onChange={handleOptionChange}
+        />
+        Option 3 (0 points)
+      </div>
+      <h3>Question 2</h3>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question2"
+          value="option1"
+          onChange={handleOptionChange}
+        />
+        Option 1 (1 point)
+      </div>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question2"
+          value="option2"
+          onChange={handleOptionChange}
+        />
+        Option 2 (0.5 points)
+      </div>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question2"
+          value="option3"
+          onChange={handleOptionChange}
+        />
+        Option 3 (0 points)
+      </div>
+      <h3>Question 3</h3>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question3"
+          value="option1"
+          onChange={handleOptionChange}
+        />
+        Option 1 (1 point)
+      </div>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question3"
+          value="option2"
+          onChange={handleOptionChange}
+        />
+        Option 2 (0.5 points)
+      </div>
+      <div className="quiz-form ">
+        <input
+          type="radio"
+          name="question3"
+          value="option3"
+          onChange={handleOptionChange}
+        />
+        Option 3 (0 points)
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    </div>
+  );
+};
     
     export default Evaluator;
     

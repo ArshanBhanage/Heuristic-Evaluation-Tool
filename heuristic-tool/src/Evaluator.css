@@ -1,44 +1,36 @@
-.questionnaire {
-    padding: 2em;
-    background-color: #f2f2f2;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px #ccc;
-    margin-top: 2em;
-    text-align: center;
-  }
+.quiz-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
-  .questionnaire h2 {
-    font-size: 1.5em;
-    margin-bottom: 1em;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  
-  .questionnaire form {
-    margin-top: 2em;
-  }
-  
-  .questionnaire form .form-group {
-    margin-bottom: 1.5em;
-  }
-  
-  .questionnaire form .form-check {
-    margin-left: 1em;
-  }
-  
-  .questionnaire form button {
-    background-color: #0066ff;
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-weight: bold;
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
-  }
-  
-  .questionnaire form button:hover {
-    background-color: #005ce6;
-  }
-  
+}
+
+.quiz-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #ccc;
+  max-width: 600px;
+  text-align: center;
+}
+
+h3 {
+  margin-top: 20px;
+}
+
+.question-container {
+  display: flex;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
