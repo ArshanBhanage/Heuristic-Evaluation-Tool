@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import "./App.css"
 import "./Signup.css"
 import "./Evaluator.css"
+import "./Profile.css"
 
 //components
 import Navbar from './components/Nav'

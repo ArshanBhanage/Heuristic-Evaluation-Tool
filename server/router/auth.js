@@ -93,5 +93,17 @@ router.get('/profile', authenticate, (req, res) => {
     res.send(req.rootUser);
 });
 
+router.get('/evaluator',  authenticate, async(req, res) => {
+    try {
+        const {name, email, company, phone, website, result} = req.body;
+        
+        if(!name || !email || !company || !phone || !website || result){}
+            return res.json({error: "fill website properly"});
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
 
 module.exports = router;

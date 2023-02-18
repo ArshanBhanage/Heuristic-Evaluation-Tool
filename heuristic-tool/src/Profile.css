@@ -1,0 +1,21 @@
+.result-circle {
+	background-color: #e9ecef;
+	border-radius: 50%;
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.score {
+	font-size: 30px;
+	font-weight: bold;
+	color: #007bff;
+}
+
+.result-text {
+	margin-top: 30px;
+	text-align: center;
+}

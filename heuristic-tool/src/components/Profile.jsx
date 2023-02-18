@@ -42,9 +42,14 @@ const Profile = () => {
     
   }, []);
 
+  // Replace the static score of 85% with the dynamic score obtained from the Google Form results
+  const score = "85%";
+  const resultText = "Congratulations! You scored 85% on the Google Form.";
+
+
   return (
     <section>
-      <form>
+      <form style={{paddingTop: "5%"}}>
       <div className="container text-center">
   <div className="row justify-content-md-center">
     <div className="col col-lg-2">
@@ -54,21 +59,19 @@ const Profile = () => {
       {console.log(userData.name)}
       <h5>{ userData.name }</h5>
       Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
-      Variable width content
+      <div className="container">
+      <h1 className="text-center">Google Form Results</h1>
+      <div className="row">
+        <div className="col-md-6 offset-md-3">
+          <div className="result-circle">
+            <p className="score">{score}</p>
+          </div>
+          <div className="result-text">
+            <p>{resultText}</p>
+          </div>
+        </div>
+      </div>
+    </div>
       Variable width content
     </div>
     <div className="col col-lg-2">
