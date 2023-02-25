@@ -44,7 +44,7 @@ const Profile = () => {
     
       callProfilePage();
     
-  }, []);
+  }, [navigate]);
 
   // Replace the static score of 85% with the dynamic score obtained from the Google Form results
   const resultText = "You scored ${userData.result}% on your evaluation.";

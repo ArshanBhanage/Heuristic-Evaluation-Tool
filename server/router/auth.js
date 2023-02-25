@@ -119,6 +119,11 @@ router.post('/tool',  authenticate, async(req, res) => {
     }
 });
 
+router.get('/logout', (req, res) => {
+    console.log("My Logout page");
+    res.clearCookie("jwtoken", {path: '/'});
+    res.status(200).send("User logout");
+});
 
 
 module.exports = router;

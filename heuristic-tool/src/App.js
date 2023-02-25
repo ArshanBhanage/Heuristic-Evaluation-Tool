@@ -15,9 +15,11 @@ import Evaluator from './components/Evaluator'
 import Profile from './components/Profile'
 import Contact from './components/Contact'
 import Signup from './components/Signup'
+import Logout from './components/Logout'
 //components
 
 import { Routes, Route } from 'react-router-dom';
+
 
 const App = () => {
   return (
@@ -31,6 +33,7 @@ const App = () => {
     <Route path='/profile' element={<Profile/>} />
     <Route path='/tool' element={<Evaluator/>} />
     <Route path='/contact' element={<Contact/>} />
+    <Route path='/logout' element={<Logout/>} />
     </Routes>
     </>
   )
