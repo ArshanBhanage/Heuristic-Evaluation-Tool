@@ -47,7 +47,6 @@ const Profile = () => {
   }, [navigate]);
 
   // Replace the static score of 85% with the dynamic score obtained from the Google Form results
-  const resultText = "You scored ${userData.result}% on your evaluation.";
 
 
   return (
@@ -69,10 +68,10 @@ const Profile = () => {
       <div className="row">
         <div className="col-md-6 offset-md-3">
           <div className="result-circle">
-            <p className="score">{userData[0]?.result}</p>
+            <p className="score">{user.result}</p>
           </div>
           <div className="result-text">
-            <p>{resultText}</p>
+            <p>hi</p>
           </div>
         </div>
       </div>
