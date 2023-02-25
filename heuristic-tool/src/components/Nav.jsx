@@ -58,6 +58,11 @@ const Nav = () => {
                 <span className="font-link" style={{ fontWeight: 'bold' }}>Profile</span>
                 </NavLink>
               </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" aria-current="page" to="/logout">
+                <span className="font-link" style={{ fontWeight: 'bold' }}>Logout</span>
+                </NavLink>
+              </li>
             </ul>
           </div>
         </div>

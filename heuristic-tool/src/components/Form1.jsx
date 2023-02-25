@@ -8,10 +8,9 @@ const Form1 = (props) => {
   const userEvaluator = async () => {
     try{
       // axios can also be used in place of fetch
-      const res = await axios.get('/profile', 
+      const res = await axios.get('/getData', 
         {
           headers: {
-          Accept:"application/json",
           "Content-Type": "application/json"
         },
 
@@ -88,33 +87,31 @@ const Form1 = (props) => {
         setUserData({...userData, website: props.websiteName, result: sum});
     //console.log(finalScore);
         console.log(sum);
+        console.log(props.websiteName);
 
         //sending to database
         const {name, email, company, phone, website, result} = userData;
-        const res = await axios.post('/profile', 
+        console.log(userData);
+        const res = await axios.post('/tool', 
         {
-          headers: {
-          "Content-Type":"application/json"
-        },
-        body: JSON.stringify({
-          name, email, company, phone, website, result
-        })
+            name, email, company, phone, website, result
         });
-        const data = await res.json();
+        const data = await res.data;
+        console.log(data);
 
         if(!data){
           console.log("data not updated");
         }else{
           //later change alert to navigate tpo result page
           alert("evaluated website successfully and stored data to db");
-          setUserData({...userData, website: "", result: 0});
+          //setUserData({...userData, website: "", result: 0});
         }
       };
     
   return (
-    
+      
         <div className="quiz-container col-md-auto ">
-          <form onSubmit={handleSubmit}>
+          <form  method='POST' onSubmit={handleSubmit}>
     
         <div>
           

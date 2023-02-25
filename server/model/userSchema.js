@@ -27,6 +27,36 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    date: {
+        type: Date,
+        default:Date.now
+    },
+    websites: [{
+        name: {
+            type:String,
+            required:true
+        },
+        email: {
+            type:String,
+            required:true
+        },
+        company: {
+            type:String,
+            required:true
+        },
+        phone: {
+            type:Number,
+            required:true
+        },
+        website: {
+            type:String,
+            required:true
+        },
+        result: {
+            type:Number,
+            required:true
+        },
+    }],
     tokens: [
         {
             token: {
@@ -57,6 +87,17 @@ userSchema.methods.generateAuthToken = async function() {
         return token;
     }catch (err) {
         console.log(err);
+    }
+}
+
+// stored website result
+userSchema.methods.addResult = async function (name, email, company, phone, website, result){
+    try {
+        this.websites = this.websites.concat({name, email, company, phone, website, result})
+        await this.save();
+        return this.websites;
+    } catch (error) {
+        console.log(error);
     }
 }
 

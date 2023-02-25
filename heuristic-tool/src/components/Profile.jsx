@@ -6,7 +6,7 @@ const Profile = () => {
 
   const navigate = useNavigate();
   
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState([]);
 
   const callProfilePage = async () => {
     try{
@@ -20,7 +20,8 @@ const Profile = () => {
         withCredentials: true
         });
         console.log(JSON.stringify(res.data));
-        setUserData((res.data));
+        setUserData((res.data.websites));
+        console.log(userData);
 
         if(res.status !== 200){
           const error = new Error(res.error);
@@ -33,6 +34,9 @@ const Profile = () => {
     }
   }
 
+  // fetching results from db
+    
+  //
 
   //useEffect function is run first when we open a page 
   // here used to refresh page
@@ -43,8 +47,7 @@ const Profile = () => {
   }, []);
 
   // Replace the static score of 85% with the dynamic score obtained from the Google Form results
-  const score = "85%";
-  const resultText = "Congratulations! You scored 85% on the Google Form.";
+  const resultText = "You scored ${userData.result}% on your evaluation.";
 
 
   return (
@@ -57,14 +60,16 @@ const Profile = () => {
     </div>
     <div className="col-md-auto">
       {console.log(userData.name)}
-      <h5>{ userData.name }</h5>
-      Variable width content
+    
+      {userData.map((user, index) => (
+    <div style={{paddingTop: "5%"}} key={index}>
+      <h3>{user.website}</h3>
       <div className="container">
       <h1 className="text-center">Google Form Results</h1>
       <div className="row">
         <div className="col-md-6 offset-md-3">
           <div className="result-circle">
-            <p className="score">{score}</p>
+            <p className="score">{userData[0]?.result}</p>
           </div>
           <div className="result-text">
             <p>{resultText}</p>
@@ -72,6 +77,10 @@ const Profile = () => {
         </div>
       </div>
     </div>
+      Variable width content
+    </div>
+  ))}
+  
       Variable width content
     </div>
     <div className="col col-lg-2">

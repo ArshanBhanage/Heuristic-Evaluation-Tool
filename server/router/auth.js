@@ -93,13 +93,28 @@ router.get('/profile', authenticate, (req, res) => {
     res.send(req.rootUser);
 });
 
-router.get('/evaluator',  authenticate, async(req, res) => {
+router.get('/getData', authenticate, (req, res) => {
+    console.log("My profile page");
+    res.send(req.rootUser);
+});
+
+router.post('/tool',  authenticate, async(req, res) => {
     try {
         const {name, email, company, phone, website, result} = req.body;
         
-        if(!name || !email || !company || !phone || !website || result){}
+        if(!name || !email || !company || !phone || !website || !result){ 
             return res.json({error: "fill website properly"});
-    } catch (error) {
+    }
+    
+        //putting the result under the user id
+            const userContact = await User.findOne({_id:req.userID});
+            if(userContact){
+                const userResult = await userContact.addResult(name, email, company, phone, website, result);
+                await userContact.save();
+                res.status(201).json({message: "website result saved succ"});
+            }
+
+        } catch (error) {
         console.log(error);
     }
 });
