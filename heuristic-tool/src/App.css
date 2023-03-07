@@ -64,7 +64,7 @@
   
 }
 
-.form-floating input[type="email"], .form-floating input[type="password"],.form-floating input[type="name"],.form-floating input[type="phone"],.form-floating input[type="cpassword"],.form-floating input[type="company"] {
+.form-floating input[type="email"], .form-floating input[type="password"],.form-floating input[type="name"],.form-floating input[type="phone"],.form-floating input[type="cpassword"],.form-floating input[type="company"],.form-floating input[type="text"] {
   border-top: none;
   border-left: none;
   border-right: none;

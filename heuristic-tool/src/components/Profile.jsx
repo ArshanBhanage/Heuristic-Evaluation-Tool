@@ -62,25 +62,25 @@ const Profile = () => {
     
       {userData.map((user, index) => (
     <div style={{paddingTop: "5%"}} key={index}>
-      <h3>{user.website}</h3>
+      <h3>Website Name: {user.website}</h3>
       <div className="container">
-      <h1 className="text-center">Google Form Results</h1>
+      <h1 className="text-center"></h1>
       <div className="row">
         <div className="col-md-6 offset-md-3">
           <div className="result-circle">
-            <p className="score">{user.result}</p>
+            <p className="score">Score: {user.result}</p>
           </div>
           <div className="result-text">
-            <p>hi</p>
+            
           </div>
         </div>
       </div>
     </div>
-      Variable width content
+      
     </div>
   ))}
   
-      Variable width content
+      
     </div>
     <div className="col col-lg-2">
       3 of 3

@@ -1,22 +1,38 @@
 .quiz-container {
-  margin-top: 5%;
+  box-shadow:  0 0 15px rgb(214, 103, 127);
+  border-radius: 5px;
+  margin-top: 2%;
+  margin-left: 10%;
+  margin-right: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
 .quiz-form {
   background-color: fff;
+  margin-left: 2%;
+  margin-right: 2%;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px #ccc;
-  max-width: 600px;
+  border-radius: 3px;
   text-align: center;
+  
+  
+}
+
+.quiz-form:hover {
+  background-color: lightgray;
+  cursor: pointer;
+  transition: 300ms;
 }
 
 .h3-gap {
+  
   margin-top: 8%;
+  margin-left: 1%;
+  margin-right: 1%;
+  border-color: aqua;
+  border-style: dashed;
 }
 
 .question-container {
@@ -36,12 +52,51 @@
   cursor: pointer;
 }
 
-
+.dropdown-form{
+  width:100%;
+  justify-content: center;
+  display: flex;
+  margin-bottom: 1%;
+}
 
 .web-name{
+  width:100%;
+  padding: 5% 0;
+  justify-content: center;
+}
+
+.card{
+  box-shadow:  0 0 15px rgb(214, 103, 127);
+  border-radius: 25px;
+  margin-left: 25%;
+  align-items: center;
+}
+
+.buttons-radio{
+  margin-bottom: 2%;
+}
+
+.eval-submit{
+  width: 20%;
+  padding-bottom: 2%;
+}
+
+.option-container{
+  height: 30px;
   
-  margin-right: 10%;
-  margin-top: 5%;
+}
+
+.flex{
+  margin-top: 15px;
+  
+}
+
+.selected {
+  background-color: lightgray;
+  color: black;
+  
+}
+
+.q-container{
   width: 100%;
-  align-content: center;
 }
