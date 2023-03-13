@@ -100,16 +100,16 @@ router.get('/getData', authenticate, (req, res) => {
 
 router.post('/tool',  authenticate, async(req, res) => {
     try {
-        const {name, email, company, phone, website, result} = req.body;
+        const {name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores} = req.body;
         
-        if(!name || !email || !company || !phone || !website || !result){ 
+        if( !name || !email  || !phone || !company || !website || !websiteUrl || !quesCat || !rresult || !roverall || !rvalid || !rinvalid || !rquestionScores){ 
             return res.json({error: "fill website properly"});
     }
     
         //putting the result under the user id
             const userContact = await User.findOne({_id:req.userID});
             if(userContact){
-                const userResult = await userContact.addResult(name, email, company, phone, website, result);
+                const userResult = await userContact.addResult(name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores);
                 await userContact.save();
                 res.status(201).json({message: "website result saved succ"});
             }

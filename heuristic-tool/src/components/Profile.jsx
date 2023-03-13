@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {useNavigate} from "react-router-dom"
 import axios from "axios"
 
-const Profile = () => {
+const Profile = (props) => {
 
   const navigate = useNavigate();
   

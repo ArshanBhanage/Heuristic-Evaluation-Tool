@@ -40,22 +40,66 @@ const userSchema = new mongoose.Schema({
             type:String,
             required:true
         },
+        phone: {
+          type:Number,
+          required:true
+      },
         company: {
             type:String,
-            required:true
-        },
-        phone: {
-            type:Number,
             required:true
         },
         website: {
             type:String,
             required:true
         },
-        result: {
-            type:Number,
-            required:true
+      websiteUrl: {
+        type: String,
+        required: true
+      },
+      quesCat:{
+        type: String,
+        required: true
+      },
+      rresult: {
+        ELearning: {
+          type: Number,
+          required: true
         },
+        Navigation: {
+          type: Number,
+          required: true
+        },
+        Search: {
+          type: Number,
+          required: true
+        }
+      },
+      roverall: {
+        type: [Number],
+        required: true
+      },
+      rvalid: {
+        type: Number,
+        required: true
+      },
+      rinvalid: {
+        type: Number,
+        required: true
+      },
+      rquestionScores: {
+        ELearning: {
+          type: [Number],
+          required: true
+        },
+        Navigation: {
+          type: [Number],
+          required: true
+        },
+        Search: {
+          type: [Number],
+          required: true
+        }
+      },
     }],
     tokens: [
         {
@@ -91,9 +135,9 @@ userSchema.methods.generateAuthToken = async function() {
 }
 
 // stored website result
-userSchema.methods.addResult = async function (name, email, company, phone, website, result){
+userSchema.methods.addResult = async function (name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores){
     try {
-        this.websites = this.websites.concat({name, email, company, phone, website, result})
+        this.websites = this.websites.concat({name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores})
         await this.save();
         return this.websites;
     } catch (error) {

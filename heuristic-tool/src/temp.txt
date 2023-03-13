@@ -1,48 +1,146 @@
-const Form2 = (props) => {
-  const [questions, setQuestions] = useState([
-    { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1] },
-    { question: "Is the website easy to navigate and find what you are looking for?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1] },
-    { question: "Was the checkout process smooth and easy to complete?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1] },
-  ]);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [scores, setScores] = useState(Array(questions.length).fill(0));
-  const [selectedOption, setSelectedOption] = useState(null);
-  
-  const handleNext = (e) => {
-    e.preventDefault();
-    const score = questions[currentQuestion].scores[selectedOption];
-    const newScores = [...scores];
-    var applicable = 0;
-    var notApplicable = 0;
-    newScores[currentQuestion] = score;
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedOption(null);
-    } else {
-      const sum = newScores.reduce((total, current) => {
-        if (current >= 0) {
-          applicable++;
-          return total + current;
-        } else {
-          notApplicable++;
-          return total;
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type:String,
+        required:true
+    },
+    email: {
+        type:String,
+        required:true
+    },
+    phone: {
+        type:Number,
+        required:true
+    },
+    company: {
+        type:String,
+        required:true
+    },
+    password: {
+        type:String,
+        required:true
+    },
+    cpassword: {
+        type:String,
+        required:true
+    },
+    date: {
+        type: Date,
+        default:Date.now
+    },
+    websites: [{
+      name: {
+        type: String,
+        required: true
+      },
+      email: {
+        type: String,
+        required: true
+      },
+      phone: {
+        type: Number,
+        required: true
+      },
+      company: {
+        type: String,
+        required: true
+      },
+      website: {
+        type: String,
+        required: true
+      },
+      websiteUrl: {
+        type: String,
+        required: true
+      },
+      rquestionScores: {
+        ELearning: {
+          type: Number,
+          required: true
+        },
+        Navigation: {
+          type: Number,
+          required: true
+        },
+        Search: {
+          type: Number,
+          required: true
         }
-      }, 0);
-    }
-    setScores(newScores);
-  }
-  
-  const handlePrevious = (e) => {
-    e.preventDefault();
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-      setSelectedOption(null);
-    } else {
-    }
-  }
+      },
+      roverall: {
+        type: [Number],
+        required: true
+      },
+      rvalid: {
+        type: Number,
+        required: true
+      },
+      rinvalid: {
+        type: Number,
+        required: true
+      },
+      rquestionScores: {
+        ELearning: {
+          type: [Number],
+          required: true
+        },
+        Navigation: {
+          type: [Number],
+          required: true
+        },
+        Search: {
+          type: [Number],
+          required: true
+        }
+      }
+    }],
+    tokens: [
+        {
+            token: {
+                type:String,
+                required:true
+            }
+        }
+    ] 
+});
 
-  const handleOptionClick = (index) => {
-    setSelectedOption(index);
-  } 
 
-there are different categories, under one category there will be different questions. modify the above code
+//hashing the password
+userSchema.pre('save', async function( next ) {
+    console.log("bcrypt succcess");
+    if(this.isModified('password')){
+        this.password = bcrypt.hashSync(this.password, 12);
+        this.cpassword = bcrypt.hashSync(this.cpassword, 12);
+    }
+    next();
+});
+
+//generating jwt token
+userSchema.methods.generateAuthToken = async function() {
+    try{
+        let token = jwt.sign({_id:this._id}, process.env.SECRET_KEY);
+        this.tokens = this.tokens.concat({ token: token });
+        await this.save();
+        return token;
+    }catch (err) {
+        console.log(err);
+    }
+}
+
+// stored website result
+userSchema.methods.addResult = async function (name, email , phone, company, website, websiteUrl, rresult, roverall, rvalid, rinvalid, rquestionScores){
+    try {
+        this.websites = this.websites.concat({name, email , phone, company, website, websiteUrl, rresult, roverall, rvalid, rinvalid, rquestionScores})
+        await this.save();
+        return this.websites;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const User = mongoose.model('USER', userSchema);
+
+module.exports = User;

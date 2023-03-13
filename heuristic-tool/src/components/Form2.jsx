@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom"
+//import axios from 'axios';
 
 const Form2 = (props) => {
-
+  const navigate = useNavigate();
   //
-  const [userData, setUserData] = useState({name:"", email: "", phone: "", company: "", website: props.websiteName, websiteUrl: props.websiteUrl });
+  const [userData, setUserData] = useState({name:"", email: "", phone: "", company: "", website: props.websiteName, websiteUrl: props.websiteUrl, quesCat: "E-Learning" });
 
   const userEvaluator = async () => {
     try {
@@ -13,16 +15,12 @@ const Form2 = (props) => {
           "Content-Type": "application/json"
         },
       });
-      
+      const data = await res.json();
+      console.log(data);
       if (res.status !== 200) {
         const error = new Error(res.error);
         throw error;
       }
-      
-      const data = await res.json();
-      //console.log(userData);
-      //const { name, email, phone, company } = res.data;
-      //console.log(JSON.stringify({ name, email, phone, company }));
       setUserData({ ...userData, name: data.name, email: data.email, phone: data.phone, company: data.company });
   
     } catch (err) {
@@ -47,14 +45,14 @@ const Form2 = (props) => {
     { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
     { question: "Clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
     { question: "Is the website easy to navigate and find what you are looking for?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
-    { question: "Was the checkout process smooth and easy to complete?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "E-Learning" },
+    { question: "Was the checkout process smooth and easy to complete?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
     // Add more questions here
   ]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState(Array(questions.length).fill(0));
   const [selectedOption, setSelectedOption] = useState(null);
   
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
     const score = questions[currentQuestion].scores[selectedOption];
     const newScores = [...scores];
@@ -86,7 +84,7 @@ const Form2 = (props) => {
         }
       });
   
-      setUserData({
+      await setUserData({
         ...userData,
         rresult: categoryScores, //category wise score
         roverall: newScores, //all questions' individual score
@@ -94,8 +92,32 @@ const Form2 = (props) => {
         rinvalid: notApplicable,
         rquestionScores: categoryQuestionScores //scores for each individual question in qCat
       });
+
+      const {name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores} = userData;
+      try {
+        const res = await fetch('/tool', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores
+          })
+        });
+        const data = await res.json();
+        if(!data){
+          console.log("data not updated");
+        }else{
+          alert("evaluated website successfully and stored data to db");
+          //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
+          //navigate('/profile', { replace: true });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      
     }
-  
+    
     setScores(newScores);
   };
   
@@ -117,29 +139,28 @@ const Form2 = (props) => {
   
   return (
     <>
-    <h1>{props.websiteName}</h1>
+    <div style={{marginLeft: "6%"}}><h2>{props.websiteName} | {props.websiteUrl}</h2></div>
     <div className="quiz-container col-md-auto ">
-      <form method='POST' onSubmit={handleNext}>
-        <h3>{questions[currentQuestion].qCat}</h3>
-        <h3 className="h3-gap">{currentQuestion + 1}.{questions[currentQuestion].question}</h3>
+      <form method='POST' onSubmit={handleNext}><br />
+        <h4>{questions[currentQuestion].qCat}</h4><hr></hr><br />
+        <div className='que-cont'> <h3 className="h3-gap">{currentQuestion + 1}.{questions[currentQuestion].question}</h3> </div>
         <div className="container">
-          <div className="row">
+          <div className="row g-6" style={{marginTop: "2%"}}>
             {questions[currentQuestion].options.map((option, index) => (
               <div className={`col-sm ${selectedOption === index ? 'selected' : ''}`} onClick={() => handleOptionClick(index)} key={index}>
-                <div className="quiz-form" >
                   <span>{option}</span>
-                </div>
+                
               </div>
             ))}
           </div>
         </div>
-  
+  <hr />
         <div className='flex' style={{ display: "flex"}}>
-          <div className='option-container' style={{ flexGrow: 1 }}>
-            {currentQuestion > 0 && <button type="button" onClick={handlePrevious}>Previous</button>}
+          <div className='option-container'>
+            {currentQuestion > 0 && <button className='btn btn-outline-secondary' type="button" onClick={handlePrevious}>Previous</button>}
           </div>
-          <div className='option-container' style={{ flexGrow: 1 }}>
-            <button type="submit" disabled={selectedOption === null}>{currentQuestion < questions.length - 1 ? "Save & Next" : "Submit"}</button>
+          <div className='option-container'>
+            <button className='btn btn-outline-success' type="submit" disabled={selectedOption === null}>{currentQuestion < questions.length - 1 ? "Save & Next" : "Submit"}</button>
           </div>
         </div>
       </form>
