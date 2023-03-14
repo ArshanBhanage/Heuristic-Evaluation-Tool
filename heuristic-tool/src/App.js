@@ -5,6 +5,7 @@ import "./App.css"
 import "./Signup.css"
 import "./Evaluator.css"
 import "./Profile.css"
+import "./Results.css"
 
 //components
 import Navbar from './components/Nav'

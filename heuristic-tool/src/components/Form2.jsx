@@ -41,7 +41,7 @@ const Form2 = (props) => {
     console.log("Updated userData:", userData);
   }, [userData]);
 
-  const [questions, setQuestions] = useState([
+  const [questions] = useState([
     { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
     { question: "Do you always know where you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
     { question: "Can you easily get back to the homepage and the previous page?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
@@ -50,7 +50,7 @@ const Form2 = (props) => {
     { question: "Is the search box visible wherever you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
     { question: "Is the website easy to navigate and find what you are looking for?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
     { question: "If you enter a misspelled word into the search box, or there are no results to show, does it provide suggestions?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
-
+    { question: "Are advanced search features available?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
 
     { question: "A clear status is shown during the loading of any modules and its elements", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
     { question: "The interface has a minimal load such that it doesn't interfere with any learner's experience and/or actions", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },

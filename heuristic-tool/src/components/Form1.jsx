@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios"
+import { useNavigate } from "react-router-dom"
+//import axios from 'axios';
+
 const Form1 = (props) => {
-
-
-  const [userData, setUserData] = useState({name:"", email: "", phone: "", company: "", website: "", result: 0 });
+  const navigate = useNavigate();
+  //
+  const [userData, setUserData] = useState({name:"", email: "", phone: "", company: "", website: props.websiteName, websiteUrl: props.websiteUrl, quesCat: "E-Commerce" });
 
   const userEvaluator = async () => {
-    try{
-      // axios can also be used in place of fetch
-      const res = await axios.get('/getData', 
-        {
-          headers: {
+    try {
+      const res = await fetch('/getData', {
+        method: "GET",
+        headers: {
           "Content-Type": "application/json"
         },
-
-        });
-        console.log(JSON.stringify(res.data));
-        const data = res.data;
-        setUserData({ ...userData, name:data.name, email:data.email, phone:data.phone, company:data.company });
-
-        if(res.status !== 200){
-          const error = new Error(res.error);
-          throw error;
-        }
-        
-    }catch (err){
+      });
+      const data = await res.json();
+      console.log(data);
+      if (res.status !== 200) {
+        const error = new Error(res.error);
+        throw error;
+      }
+      setUserData({ ...userData, name: data.name, email: data.email, phone: data.phone, company: data.company });
+  
+    } catch (err) {
       console.log(err);
     }
   }
@@ -33,860 +32,161 @@ const Form1 = (props) => {
   //useEffect function is run first when we open a page 
   // here used to refresh page
   useEffect(() => {
-    
       userEvaluator();
     
   }, []);
+  //
 
+  useEffect(() => {
+    console.log("Updated userData:", userData);
+  }, [userData]);
 
-    const [scores, setScores] = useState({
-        question1: 0,
-        question2: 0,
-        question3: 0,
-        question4: 0,
-        question5: 0,
-        question6: 0,
-        question7: 0,
-        question8: 0,
-        question9: 0,
-        question10: 0,
-        question11: 0,
-        question12: 0,
-        question13: 0,
-      });
-// yes +2, room for improvement +1,no 0, not applicable
+  const [questions] = useState([
+    { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
+    { question: "Do you always know where you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
+    { question: "Can you easily get back to the homepage and the previous page?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
+    { question: "Does the hierarchy of categories/pages make sense to you?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
 
-      const handleOptionChange = (e) => {
-        switch (e.target.name) {
-          case "question1":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question1: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question1: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question1: 0.3 });
-            } else {
-              setScores({ ...scores, question1: 0 });
-            }
-            break;
-          case "question2":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question2: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question2: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question2: 0.3 });
-            } else {
-              setScores({ ...scores, question2: 0 });
-            }
-            break;
-          case "question3":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question3: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question3: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question3: 0.3 });
-            } else {
-              setScores({ ...scores, question3: 0 });
-            }
-            break;
-            case "question4":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question4: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question4: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question4: 0.3 });
-            } else {
-              setScores({ ...scores, question4: 0 });
-            }
-            break;
-            case "question5":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question5: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question5: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question5: 0.3 });
-            } else {
-              setScores({ ...scores, question5: 0 });
-            }
-            break;
-            case "question6":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question6: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question6: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question6: 0.3 });
-            } else {
-              setScores({ ...scores, question6: 0 });
-            }
-            break;
-            case "question7":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question7: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question7: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question7: 0.3 });
-            } else {
-              setScores({ ...scores, question7: 0 });
-            }
-            break;
-            case "question8":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question8: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question8: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question8: 0.3 });
-            } else {
-              setScores({ ...scores, question8: 0 });
-            }
-            break;
-            case "question9":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question9: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question9: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question9: 0.3 });
-            } else {
-              setScores({ ...scores, question9: 0 });
-            }
-            break;
-            case "question10":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question10: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question10: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question10: 0.3 });
-            } else {
-              setScores({ ...scores, question10: 0 });
-            }
-            break;
-            case "question11":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question11: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question11: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question11: 0.3 });
-            } else {
-              setScores({ ...scores, question11: 0 });
-            }
-            break;
-            case "question12":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question12: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question12: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question12: 0.3 });
-            } else {
-              setScores({ ...scores, question12: 0 });
-            }
-            break;
-            case "question13":
-            if (e.target.value === "option1") {
-              setScores({ ...scores, question13: 1 });
-            } else if (e.target.value === "option2") {
-              setScores({ ...scores, question13: 0.5 });
-            } else if (e.target.value === "option3") {
-              setScores({ ...scores, question13: 0.3 });
-            } else {
-              setScores({ ...scores, question13: 0 });
-            }
-            break;
-          default:
-            break;
-        }
-      };
+    { question: "Is the search box visible wherever you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
+    { question: "Is the website easy to navigate and find what you are looking for?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
+    { question: "If you enter a misspelled word into the search box, or there are no results to show, does it provide suggestions?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
+    { question: "Are advanced search features available?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
+
+    { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "Does the website provide clear and concise information about its products and services? ", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "Are the website's forms and checkout processes easy to use and understand?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "Are customer reviews and ratings visible and accessible?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "Is the shopping cart easily accessible and clearly shows items added?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "Does the website provide ways for users to contact customer support if they have questions or issues?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
     
-      const handleSubmit = async(e) => {
-        e.preventDefault();
-    const sum = Object.values(scores).reduce((acc, score) => acc + score, 0);
-    // Save the sum to a database or display it on the page
-        setUserData({...userData, website: props.websiteName, result: sum});
-    //console.log(finalScore);
-        console.log(sum);
-        console.log(props.websiteName);
+    // Add more questions here
+  ]);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [scores, setScores] = useState(Array(questions.length).fill(0));
+  const [selectedOption, setSelectedOption] = useState(null);
+  
+  const handleNext = async (e) => {
+    e.preventDefault();
+    const score = questions[currentQuestion].scores[selectedOption];
+    const newScores = [...scores];
+    let applicable = 0;
+    let notApplicable = 0;
+    newScores[currentQuestion] = score;
+  
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedOption(null);
+    } else {
+      const categoryScores = {};
+      const categoryQuestionScores = {};
+      const categoryApplicableCounts = {};
+  
+      questions.forEach(({qCat, scores}, index) => {
+        if (!categoryScores[qCat]) {
+          categoryScores[qCat] = 0;
+          categoryQuestionScores[qCat] = Array(scores.length).fill(0);
+          categoryApplicableCounts[qCat] = 0;
+        }
+  
+        const score = newScores[index];
+        if (score >= 0) {
+          categoryScores[qCat] += score;
+          categoryQuestionScores[qCat][index] = score;
+          categoryApplicableCounts[qCat]++;
+          applicable++;
+        } else {
+          notApplicable++;
+          categoryQuestionScores[qCat][index] = -1; // add -1 for not applicable options
+        }
+      });
+      console.log("Category applicable counts:", categoryApplicableCounts);
+  
+      setUserData({
+        ...userData,
+        rresult: categoryScores, //category wise score
+        roverall: newScores, //all questions' individual score
+        rvalid: applicable,
+        rinvalid: notApplicable,
+        rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
+        categoryRValid: categoryApplicableCounts
+      });
 
-        //sending to database
-        const {name, email, company, phone, website, result} = userData;
-        console.log(userData);
-
-        const res = await axios.post('/tool', 
-        {
-            name, email, company, phone, website, result
+      const {name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid} = userData;
+      try {
+        const res = await fetch('/tool', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid
+          })
         });
-        const data = await res.data;
-        console.log(data);
-
+        const data = await res.json();
         if(!data){
           console.log("data not updated");
         }else{
-          //later change alert to navigate tpo result page
           alert("evaluated website successfully and stored data to db");
-          //setUserData({...userData, website: "", result: 0});
-        }
-      };
-    
-  return (
-      
-        <div className="quiz-container col-md-auto ">
-          <form  method='POST' onSubmit={handleSubmit}>
-    
-        <div>
+          //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
+          //navigate('/results', { state: { userData }, replace: true });
           
-        </div>
-        <h1>{props.websiteName}</h1>
-          <h5 className = "h3-gap" >1. Are product descriptions clear and detailed with high-quality images?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question1"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question1"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question1"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question1"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>  
+                   
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      
+    }
     
-          <h5 className = "h3-gap" >2. Is the shopping cart easily accessible and clearly shows items added?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question2"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
+    setScores(newScores);
+  };
+  
+
+  
+  const handlePrevious = (e) => {
+    e.preventDefault();
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+      setSelectedOption(null);
+    } else {
+      // Handle beginning of quiz
+    }
+  }
+
+  const handleOptionClick = (index) => {
+    setSelectedOption(index);
+  }
+  
+  return (
+    <>
+    <div style={{marginLeft: "6%"}}><h2>{props.websiteName} | {props.websiteUrl}</h2></div>
+    <div className="quiz-container col-md-auto ">
+      <form method='POST' onSubmit={handleNext}><br />
+        <h4>{questions[currentQuestion].qCat}</h4><hr></hr><br />
+        <div className='que-cont'> <h4 className="h3-gap">{currentQuestion + 1}.{questions[currentQuestion].question}</h4> </div>
+        <div className="container">
+          <div className="row g-6" style={{marginTop: "2%"}}>
+            {questions[currentQuestion].options.map((option, index) => (
+              <div className={`col-sm ${selectedOption === index ? 'selected' : ''}`} onClick={() => handleOptionClick(index)} key={index}>
+                  <span>{option}</span>
+                
+              </div>
+            ))}
           </div>
         </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question2"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
+  <hr />
+        <div className='flex' style={{ display: "flex"}}>
+          <div className='option-container'>
+            {currentQuestion > 0 && <button className='btn btn-outline-secondary' type="button" onClick={handlePrevious}>Previous</button>}
+          </div>
+          <div className='option-container'>
+            <button className='btn btn-outline-success' type="submit" disabled={selectedOption === null}>{currentQuestion < questions.length - 1 ? "Save & Next" : "Submit"}</button>
           </div>
         </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question2"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question2"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div><hr></hr>
+      </form>
     </div>
-          <h5 className = "h3-gap" >3. Are the steps in the checkout process simple and straightforward?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question3"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question3"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question3"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question3"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >4. Are customer reviews and ratings visible and accessible?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question4"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question4"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question4"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question4"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >5. Are the learning objectives for each module/course clearly stated?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question5"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question5"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question5"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question5"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >6. On the homepage, is it clear what the business does and what the key benefits are for customers?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question6"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question6"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question6"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question6"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >7. The homepage contains most of my interest material and topics?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question7"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question7"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question7"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question7"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >8. Does the website have plenty of white space and feel uncluttered?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question8"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question8"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question8"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question8"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >9. Does the website feel current and up to date?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question9"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question9"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question9"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question9"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >10. It is easy to find the information I needed?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question10"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question10"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question10"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question10"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >11. It is easy to move around at this website by using the links or back button of the browser.</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question11"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question11"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question11"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question11"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >12. Do you always know where you are on the site?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question12"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question12"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question12"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question12"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-    <h5 className = "h3-gap" >13. Can you easily get back to the homepage and the previous page?</h5>
-          <div className="container">
-      <div className="row">
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question13"
-              value="option1"
-              onChange={handleOptionChange}
-            />
-            Yes
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question13"
-              value="option2"
-              onChange={handleOptionChange}
-            />
-            Room for improvement
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question13"
-              value="option3"
-              onChange={handleOptionChange}
-            />
-            No
-          </div>
-        </div>
-        <div className="col-sm">
-        <div className="quiz-form ">
-            <input
-              type="radio"
-              name="question13"
-              value="option4"
-              onChange={handleOptionChange}
-            />
-            Not Applicable
-          </div>
-        </div>
-      </div>
-    </div>
-          <button className="buttons-radio" type="submit">Submit</button>
-        </form>
-        </div>
-      );
-    
+    </>
+  );
 }
 
-export default Form1
+export default Form1;
