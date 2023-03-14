@@ -11,6 +11,7 @@ import Navbar from './components/Nav'
 import About from './components/About'
 import Login from './components/Login'
 import Home from './components/Home'
+import Results from './components/Results'
 import Evaluator from './components/Evaluator'
 import Profile from './components/Profile'
 import Contact from './components/Contact'
@@ -32,6 +33,7 @@ const App = () => {
     <Route path='/login' element={<Login/>} />
     <Route path='/profile' element={<Profile/>} />
     <Route path='/tool' element={<Evaluator/>} />
+    <Route path='/results' element={<Results/>} />
     <Route path='/contact' element={<Contact/>} />
     <Route path='/logout' element={<Logout/>} />
     </Routes>

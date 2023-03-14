@@ -66,34 +66,39 @@ const Form2 = (props) => {
     } else {
       const categoryScores = {};
       const categoryQuestionScores = {};
+      const categoryApplicableCounts = {};
   
       questions.forEach(({qCat, scores}, index) => {
         if (!categoryScores[qCat]) {
           categoryScores[qCat] = 0;
           categoryQuestionScores[qCat] = Array(scores.length).fill(0);
+          categoryApplicableCounts[qCat] = 0;
         }
   
         const score = newScores[index];
         if (score >= 0) {
           categoryScores[qCat] += score;
           categoryQuestionScores[qCat][index] = score;
+          categoryApplicableCounts[qCat]++;
           applicable++;
         } else {
           notApplicable++;
           categoryQuestionScores[qCat][index] = -1; // add -1 for not applicable options
         }
       });
+      console.log("Category applicable counts:", categoryApplicableCounts);
   
-      await setUserData({
+      setUserData({
         ...userData,
         rresult: categoryScores, //category wise score
         roverall: newScores, //all questions' individual score
         rvalid: applicable,
         rinvalid: notApplicable,
-        rquestionScores: categoryQuestionScores //scores for each individual question in qCat
+        rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
+        categoryRValid: categoryApplicableCounts
       });
 
-      const {name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores} = userData;
+      const {name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid} = userData;
       try {
         const res = await fetch('/tool', {
           method: "POST",
@@ -101,7 +106,7 @@ const Form2 = (props) => {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores
+            name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid
           })
         });
         const data = await res.json();
@@ -110,7 +115,9 @@ const Form2 = (props) => {
         }else{
           alert("evaluated website successfully and stored data to db");
           //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
-          //navigate('/profile', { replace: true });
+          //navigate('/results', { state: { userData }, replace: true });
+          
+                   
         }
       } catch (error) {
         console.error(error);

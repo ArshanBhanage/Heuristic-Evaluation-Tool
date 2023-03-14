@@ -100,6 +100,20 @@ const userSchema = new mongoose.Schema({
           required: true
         }
       },
+      categoryRValid: {
+        ELearning: {
+          type: Number,
+          required: true
+        },
+        Navigation: {
+          type: Number,
+          required: true
+        },
+        Search: {
+          type: Number,
+          required: true
+        }
+      },
     }],
     tokens: [
         {
@@ -135,9 +149,9 @@ userSchema.methods.generateAuthToken = async function() {
 }
 
 // stored website result
-userSchema.methods.addResult = async function (name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores){
+userSchema.methods.addResult = async function (name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid){
     try {
-        this.websites = this.websites.concat({name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores})
+        this.websites = this.websites.concat({name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid})
         await this.save();
         return this.websites;
     } catch (error) {
