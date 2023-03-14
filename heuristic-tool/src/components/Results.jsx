@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react'
-//import { useLocation } from 'react-router-dom';
 
 const Results = (props) => {
-  //const location = useLocation();
-  //const userData = location.state?.userData;
-  
-  // website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores
-  //name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores
   const [resultData, setResultData] = useState({ websites: [] });
   const userEvaluator = async () => {
     try {
@@ -57,10 +51,6 @@ const Results = (props) => {
   }
   
   //
-  //end
-
-    
-
   
  
   return (
