@@ -43,9 +43,23 @@ const Form2 = (props) => {
 
   const [questions, setQuestions] = useState([
     { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
-    { question: "Clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
+    { question: "Do you always know where you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
+    { question: "Can you easily get back to the homepage and the previous page?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
+    { question: "Does the hierarchy of categories/pages make sense to you?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
+
+    { question: "Is the search box visible wherever you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
     { question: "Is the website easy to navigate and find what you are looking for?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
-    { question: "Was the checkout process smooth and easy to complete?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "If you enter a misspelled word into the search box, or there are no results to show, does it provide suggestions?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
+
+
+    { question: "A clear status is shown during the loading of any modules and its elements", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "The interface has a minimal load such that it doesn't interfere with any learner's experience and/or actions", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "The educational programs are comprehensible and effective enough for the learners compared to the conventional learning means", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "The service provides a freedom of choice to pause and resume programs at the learner's will along with checkpoints to retain the progress.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "The site provides a section for learners to hold discussions related to any topics relevant to the provided programs in a systematic and orderly fashion.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "The programs contain various types of graphical representation in the most effective way to aid in learning experience.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "A concise summary of modules and units are provided for a quick revision of key points reducing the time usually needed for the same.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "The service provides a variety of resources to the learners for pursuing further knowledge on the studied units.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
     // Add more questions here
   ]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -150,7 +164,7 @@ const Form2 = (props) => {
     <div className="quiz-container col-md-auto ">
       <form method='POST' onSubmit={handleNext}><br />
         <h4>{questions[currentQuestion].qCat}</h4><hr></hr><br />
-        <div className='que-cont'> <h3 className="h3-gap">{currentQuestion + 1}.{questions[currentQuestion].question}</h3> </div>
+        <div className='que-cont'> <h4 className="h3-gap">{currentQuestion + 1}.{questions[currentQuestion].question}</h4> </div>
         <div className="container">
           <div className="row g-6" style={{marginTop: "2%"}}>
             {questions[currentQuestion].options.map((option, index) => (
