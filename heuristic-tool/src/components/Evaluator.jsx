@@ -58,7 +58,7 @@ const Evaluator = () => {
             </select>
           </div>
           <div className='eval-submit'>
-            <button onClick={handleFormSubmit}>Submit</button>
+            <button className='btn btn-success' onClick={handleFormSubmit}>Submit</button>
           </div>
         </div>
       )}

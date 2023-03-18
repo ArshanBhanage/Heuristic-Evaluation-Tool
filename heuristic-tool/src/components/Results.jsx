@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+//import html2pdf from 'html2pdf.js';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -34,10 +35,10 @@ const Results = () => {
     return <div>Loading...</div>;
   }
 
-  const myArray = resultData.websites[resultData.websites.length-1];
+  const myArray = resultData.websites[resultData.websites.length-1]; //for the latest entry in db
 
   if (myArray !== undefined) {
-    const overAlll = myArray.roverall;
+    const overAlll = myArray.rresult;
     const overAll = Object.values(overAlll);
     const sum = overAll.reduce((acc, curr) => curr >= 0 ? acc + curr : acc, 0);
     const totalOverAllMarks = myArray.rvalid * 2;
@@ -91,7 +92,7 @@ It is best to review the below information to understand the specific areas or t
     <div className="col">
       {section.map((sectionName, index) => (
             <div className='cat' key={index}>
-              <h2>{sectionName}</h2>
+              <h3>{sectionName}</h3>
               <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content.
               Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card </p>
               <hr />

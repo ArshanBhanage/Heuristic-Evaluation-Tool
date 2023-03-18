@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
-//import axios from 'axios';
 
 const Form2 = (props) => {
   const navigate = useNavigate();
   //
-  const [userData, setUserData] = useState({name:"", email: "", phone: "", company: "", website: props.websiteName, websiteUrl: props.websiteUrl, quesCat: "E-Learning" });
+  const [userData, setUserData] = useState({website: props.websiteName, websiteUrl: props.websiteUrl, quesCat: "E-Learning" });
 
   const userEvaluator = async () => {
     try {
@@ -21,7 +20,6 @@ const Form2 = (props) => {
         const error = new Error(res.error);
         throw error;
       }
-      setUserData({ ...userData, name: data.name, email: data.email, phone: data.phone, company: data.company });
   
     } catch (err) {
       console.log(err);
@@ -39,6 +37,33 @@ const Form2 = (props) => {
 
   useEffect(() => {
     console.log("Updated userData:", userData);
+    if(userData.categoryRValid){
+      (async () => {
+        const {website, websiteUrl, quesCat, rresult, rvalid, categoryRValid} = userData;
+        try {
+          const res = await fetch('/tool', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              website, websiteUrl, quesCat, rresult, rvalid, categoryRValid
+            })
+          });
+          const data = await res.json();
+          if(!data){
+            console.log("data not updated");
+          }else{
+            alert("evaluated website successfully and stored data to db");
+            //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
+              navigate('/results', {replace: true});
+                     
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
   }, [userData]);
 
   const [questions] = useState([
@@ -52,14 +77,14 @@ const Form2 = (props) => {
     { question: "If you enter a misspelled word into the search box, or there are no results to show, does it provide suggestions?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
     { question: "Are advanced search features available?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
 
-    { question: "A clear status is shown during the loading of any modules and its elements", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "The interface has a minimal load such that it doesn't interfere with any learner's experience and/or actions", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "The educational programs are comprehensible and effective enough for the learners compared to the conventional learning means", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "The service provides a freedom of choice to pause and resume programs at the learner's will along with checkpoints to retain the progress.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "The site provides a section for learners to hold discussions related to any topics relevant to the provided programs in a systematic and orderly fashion.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "The programs contain various types of graphical representation in the most effective way to aid in learning experience.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "A concise summary of modules and units are provided for a quick revision of key points reducing the time usually needed for the same.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "The service provides a variety of resources to the learners for pursuing further knowledge on the studied units.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "A clear status is shown during the loading of any modules and its elements", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "The interface has a minimal load such that it doesn't interfere with any learner's experience and/or actions", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "The educational programs are comprehensible and effective enough for the learners compared to the conventional learning means", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "The service provides a freedom of choice to pause and resume programs at the learner's will along with checkpoints to retain the progress.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "The site provides a section for learners to hold discussions related to any topics relevant to the provided programs in a systematic and orderly fashion.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "The programs contain various types of graphical representation in the most effective way to aid in learning experience.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "A concise summary of modules and units are provided for a quick revision of key points reducing the time usually needed for the same.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "The service provides a variety of resources to the learners for pursuing further knowledge on the studied units.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
     // Add more questions here
   ]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -71,7 +96,6 @@ const Form2 = (props) => {
     const score = questions[currentQuestion].scores[selectedOption];
     const newScores = [...scores];
     let applicable = 0;
-    let notApplicable = 0;
     newScores[currentQuestion] = score;
   
     if (currentQuestion < questions.length - 1) {
@@ -96,7 +120,6 @@ const Form2 = (props) => {
           categoryApplicableCounts[qCat]++;
           applicable++;
         } else {
-          notApplicable++;
           categoryQuestionScores[qCat][index] = -1; // add -1 for not applicable options
         }
       });
@@ -105,37 +128,11 @@ const Form2 = (props) => {
       setUserData({
         ...userData,
         rresult: categoryScores, //category wise score
-        roverall: newScores, //all questions' individual score
+        //roverall: newScores, //all questions' individual score
         rvalid: applicable,
-        rinvalid: notApplicable,
-        rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
+        //rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
         categoryRValid: categoryApplicableCounts
       });
-
-      const {name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid} = userData;
-      try {
-        const res = await fetch('/tool', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid
-          })
-        });
-        const data = await res.json();
-        if(!data){
-          console.log("data not updated");
-        }else{
-          alert("evaluated website successfully and stored data to db");
-          //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
-          //navigate('/results', { state: { userData }, replace: true });
-          
-                   
-        }
-      } catch (error) {
-        console.error(error);
-      }
       
     }
     

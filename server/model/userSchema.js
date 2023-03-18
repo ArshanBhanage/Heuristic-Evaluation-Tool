@@ -32,22 +32,6 @@ const userSchema = new mongoose.Schema({
         default:Date.now
     },
     websites: [{
-        name: {
-            type:String,
-            required:true
-        },
-        email: {
-            type:String,
-            required:true
-        },
-        phone: {
-          type:Number,
-          required:true
-      },
-        company: {
-            type:String,
-            required:true
-        },
         website: {
             type:String,
             required:true
@@ -61,7 +45,7 @@ const userSchema = new mongoose.Schema({
         required: true
       },
       rresult: {
-        ELearning: {
+        mainquestions: {
           type: Number,
           required: true
         },
@@ -73,35 +57,13 @@ const userSchema = new mongoose.Schema({
           type: Number,
           required: true
         }
-      },
-      roverall: {
-        type: [Number],
-        required: true
       },
       rvalid: {
         type: Number,
         required: true
       },
-      rinvalid: {
-        type: Number,
-        required: true
-      },
-      rquestionScores: {
-        ELearning: {
-          type: [Number],
-          required: true
-        },
-        Navigation: {
-          type: [Number],
-          required: true
-        },
-        Search: {
-          type: [Number],
-          required: true
-        }
-      },
       categoryRValid: {
-        ELearning: {
+        mainquestions: {
           type: Number,
           required: true
         },
@@ -149,9 +111,9 @@ userSchema.methods.generateAuthToken = async function() {
 }
 
 // stored website result
-userSchema.methods.addResult = async function (name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid){
+userSchema.methods.addResult = async function (website, websiteUrl, quesCat, rresult, rvalid, categoryRValid){
     try {
-        this.websites = this.websites.concat({name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid})
+        this.websites = this.websites.concat({website, websiteUrl, quesCat, rresult, rvalid, categoryRValid})
         await this.save();
         return this.websites;
     } catch (error) {

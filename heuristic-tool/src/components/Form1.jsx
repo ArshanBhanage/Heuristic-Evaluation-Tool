@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
-//import axios from 'axios';
 
 const Form1 = (props) => {
   const navigate = useNavigate();
   //
-  const [userData, setUserData] = useState({name:"", email: "", phone: "", company: "", website: props.websiteName, websiteUrl: props.websiteUrl, quesCat: "E-Commerce" });
+  const [userData, setUserData] = useState({ website: props.websiteName, websiteUrl: props.websiteUrl, quesCat: "E-Commerce" });
 
   const userEvaluator = async () => {
     try {
@@ -21,7 +20,6 @@ const Form1 = (props) => {
         const error = new Error(res.error);
         throw error;
       }
-      setUserData({ ...userData, name: data.name, email: data.email, phone: data.phone, company: data.company });
   
     } catch (err) {
       console.log(err);
@@ -39,6 +37,33 @@ const Form1 = (props) => {
 
   useEffect(() => {
     console.log("Updated userData:", userData);
+    if(userData.categoryRValid){
+      (async () => {
+        const {website, websiteUrl, quesCat, rresult, rvalid, categoryRValid} = userData;
+        try {
+          const res = await fetch('/tool', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              website, websiteUrl, quesCat, rresult, rvalid, categoryRValid
+            })
+          });
+          const data = await res.json();
+          if(!data){
+            console.log("data not updated");
+          }else{
+            alert("evaluated website successfully and stored data to db");
+            //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
+              navigate('/results', {replace: true});
+                     
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
   }, [userData]);
 
   const [questions] = useState([
@@ -52,12 +77,12 @@ const Form1 = (props) => {
     { question: "If you enter a misspelled word into the search box, or there are no results to show, does it provide suggestions?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
     { question: "Are advanced search features available?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
 
-    { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "Does the website provide clear and concise information about its products and services? ", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "Are the website's forms and checkout processes easy to use and understand?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "Are customer reviews and ratings visible and accessible?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "Is the shopping cart easily accessible and clearly shows items added?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
-    { question: "Does the website provide ways for users to contact customer support if they have questions or issues?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "ELearning" },
+    { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "Does the website provide clear and concise information about its products and services? ", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "Are the website's forms and checkout processes easy to use and understand?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "Are customer reviews and ratings visible and accessible?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "Is the shopping cart easily accessible and clearly shows items added?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
+    { question: "Does the website provide ways for users to contact customer support if they have questions or issues?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
     
     // Add more questions here
   ]);
@@ -70,7 +95,6 @@ const Form1 = (props) => {
     const score = questions[currentQuestion].scores[selectedOption];
     const newScores = [...scores];
     let applicable = 0;
-    let notApplicable = 0;
     newScores[currentQuestion] = score;
   
     if (currentQuestion < questions.length - 1) {
@@ -95,7 +119,6 @@ const Form1 = (props) => {
           categoryApplicableCounts[qCat]++;
           applicable++;
         } else {
-          notApplicable++;
           categoryQuestionScores[qCat][index] = -1; // add -1 for not applicable options
         }
       });
@@ -104,37 +127,14 @@ const Form1 = (props) => {
       setUserData({
         ...userData,
         rresult: categoryScores, //category wise score
-        roverall: newScores, //all questions' individual score
+        //roverall: newScores, //all questions' individual score
         rvalid: applicable,
-        rinvalid: notApplicable,
-        rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
+        //rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
         categoryRValid: categoryApplicableCounts
       });
 
-      const {name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid} = userData;
-      try {
-        const res = await fetch('/tool', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name, email , phone, company, website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid
-          })
-        });
-        const data = await res.json();
-        if(!data){
-          console.log("data not updated");
-        }else{
-          alert("evaluated website successfully and stored data to db");
-          //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
-          //navigate('/results', { state: { userData }, replace: true });
-          
-                   
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      //submit func here
+      
       
     }
     
