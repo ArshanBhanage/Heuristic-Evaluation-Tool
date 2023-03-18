@@ -1,10 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react'
-//import html2pdf from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
+import { useNavigate } from "react-router-dom"
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const Results = () => {
   const [resultData, setResultData] = useState({ websites: [] });
+  const componentRef = useRef();
+  const navigate = useNavigate();
+
+  function handleExit() {
+    navigate('/');
+  }
+
+
+  const handleDownloadPdf = () => {
+    const input = componentRef.current;
+    html2pdf(input, {
+      margin: 0.5,
+      filename: 'mypage.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { dpi: 192, letterRendering: true },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+      pagebreak: { avoid: ['.pagebreak'] },
+    });
+  };
 
   const userEvaluator = async () => {
     try {
@@ -60,9 +80,9 @@ const Results = () => {
 <div className='row'><h3>{resultData.websites[resultData.websites.length-1].website}</h3></div>
 <div className='row' style={{marginBottom: "3%"}}><h3>{resultData.websites[resultData.websites.length-1].websiteUrl}</h3></div>
 <div className='row'>
-  <div className='col'><button className='btn btn-warning'>Exit</button></div>
-  <div className='col'><button className='btn btn-success'>Download PDF</button></div>
-</div>
+  <div className='col'><button className='btn btn-warning' onClick={handleExit}>Exit</button></div>
+  <div className='col'><button className='btn btn-success' onClick={handleDownloadPdf}>Download PDF</button></div>
+</div><div ref={componentRef}>
 <div className="card-name text-dark bg-light mb-3">
   <div className="card-body-r">
     
@@ -111,7 +131,7 @@ It is best to review the below information to understand the specific areas or t
   </div>
   </div>
   </div>
- 
+  </div>
       </div>
     );
   }
