@@ -129,3 +129,19 @@
   color: #333;
 }
 
+.card-name-profile{
+  box-shadow:  0 0 15px rgb(214, 103, 127);
+  border-radius: 5px;
+  width: 45%;
+  
+}
+
+.container-profile{
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center; 
+  margin-top: 2%;
+  margin-bottom: 2% 
+}
