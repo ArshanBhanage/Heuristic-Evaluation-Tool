@@ -129,26 +129,43 @@ const Results = () => {
         </div>
     
         {section.map((sectionName, index) => (
-          <div key={index} className="card-name text-dark bg-light mb-3">
-            <div className="card-body-r">
-              <h3 className="card-title">{sectionName}</h3>
-              <div className='row'>
-                <div className='col'>
-                <p className="card-text">
-                Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.
-              </p>
-                </div>
-                <div className='col'>
-                <div className="circular-pro" style={{ width: '160px' }}>
-                <CircularProgressbar value={catPercent[index]} text={`${catPercent[index]}%`} strokeWidth={5} />
-              </div>
-              
-                </div>
-              </div>
-              
-            </div>
+  <div key={index} className="card-name text-dark bg-light mb-3">
+    <div className="card-body-r">
+    {index === 0 ? (
+        <h3 className="card-title">{resultData.websites[myIndex].quesCat}</h3>
+      ) : (
+        <h3 className="card-title">{sectionName}</h3>
+      )}
+      <div className='row'>
+        <div className='col'>
+        {index === 0 ? (
+            <p className="card-text">
+              Special content for first section.
+            </p>
+          ) : index === 1 ? (
+            <p className="card-text">
+              Special content for second section.
+            </p>
+          ) : index === 2 ? (
+            <p className="card-text">
+              Special content for third section.
+            </p>
+          ) : (
+            <p className="card-text">
+              Default content for all other sections.
+            </p>
+          )}
+        </div>
+        <div className='col'>
+          <div className="circular-pro" style={{ width: '160px' }}>
+            <CircularProgressbar value={catPercent[index]} text={`${catPercent[index]}%`} strokeWidth={5} />
           </div>
-        ))}
+        </div>
+      </div>
+    </div>
+  </div>
+))}
+
     
       </div>
     
