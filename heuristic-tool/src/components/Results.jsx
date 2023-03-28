@@ -21,7 +21,7 @@ const Results = () => {
     html2pdf(input, {
       margin: 0.5,
       filename: 'mypage.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg', quality: 1 },
       html2canvas: { dpi: 192, letterRendering: true },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
       pagebreak: { avoid: ['.pagebreak'] },
@@ -67,10 +67,6 @@ const Results = () => {
   
   let myArray = resultData.websites[myIndex];  
   console.log("myArray", myArray);
-  
-  
-  
-  
 
   if (myArray !== undefined) {
     const overAlll = myArray.rresult;

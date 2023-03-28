@@ -76,6 +76,20 @@ const userSchema = new mongoose.Schema({
           required: true
         }
       },
+      // rquestionScores:[{
+      //   category: {
+      //     type: String,
+      //     required: true
+      //   },
+      //   question: {
+      //     type: String,
+      //     required: true
+      //   },
+      //   score:{
+      //     type: Number,
+      //     required: true
+      //   }
+      // }]
     }],
     tokens: [
         {

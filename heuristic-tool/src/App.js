@@ -18,6 +18,7 @@ import Profile from './components/Profile'
 import Contact from './components/Contact'
 import Signup from './components/Signup'
 import Logout from './components/Logout'
+import OpenAiFeedback from './components/OpenAiFeedback'
 //components
 
 import { Routes, Route } from 'react-router-dom';
@@ -37,6 +38,7 @@ const App = () => {
     <Route path='/results' element={<Results/>} />
     <Route path='/contact' element={<Contact/>} />
     <Route path='/logout' element={<Logout/>} />
+    <Route path='/openai' element={<OpenAiFeedback/>} />
     </Routes>
     </>
   )

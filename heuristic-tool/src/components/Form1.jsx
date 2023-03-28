@@ -39,7 +39,7 @@ const Form1 = (props) => {
     console.log("Updated userData:", userData);
     if(userData.categoryRValid){
       (async () => {
-        const {website, websiteUrl, quesCat, rresult, rvalid, categoryRValid} = userData;
+        const {website, websiteUrl, quesCat, rresult, rvalid, categoryRValid, rquestionScores} = userData;
         try {
           const res = await fetch('/tool', {
             method: "POST",
@@ -47,7 +47,7 @@ const Form1 = (props) => {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              website, websiteUrl, quesCat, rresult, rvalid, categoryRValid
+              website, websiteUrl, quesCat, rresult, rvalid, categoryRValid, rquestionScores
             })
           });
           const data = await res.json();
@@ -103,6 +103,7 @@ const Form1 = (props) => {
     } else {
       const categoryScores = {};
       const categoryQuestionScores = {};
+      const questionScores = {};
       const categoryApplicableCounts = {};
   
       questions.forEach(({qCat, scores}, index) => {
@@ -111,7 +112,7 @@ const Form1 = (props) => {
           categoryQuestionScores[qCat] = Array(scores.length).fill(0);
           categoryApplicableCounts[qCat] = 0;
         }
-  
+
         const score = newScores[index];
         if (score >= 0) {
           categoryScores[qCat] += score;
@@ -121,8 +122,14 @@ const Form1 = (props) => {
         } else {
           categoryQuestionScores[qCat][index] = -1; // add -1 for not applicable options
         }
+
+        questionScores[index] = {
+          category: questions[index].qCat,
+          question: questions[index].question,
+          score: score
+        };
       });
-      console.log("Category applicable counts:", categoryApplicableCounts);
+      console.log("Question Scores:", questionScores);
   
       setUserData({
         ...userData,
@@ -130,11 +137,9 @@ const Form1 = (props) => {
         //roverall: newScores, //all questions' individual score
         rvalid: applicable,
         //rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
-        categoryRValid: categoryApplicableCounts
+        categoryRValid: categoryApplicableCounts,
+        //rquestionScores: questionScores
       });
-
-      //submit func here
-      
       
     }
     
