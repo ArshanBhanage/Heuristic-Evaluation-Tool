@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      rquestionScores:[{
+        type: String,
+        required: true
+      }],
       rresult: {
         mainquestions: {
           type: Number,
@@ -76,20 +80,6 @@ const userSchema = new mongoose.Schema({
           required: true
         }
       },
-      // rquestionScores:[{
-      //   category: {
-      //     type: String,
-      //     required: true
-      //   },
-      //   question: {
-      //     type: String,
-      //     required: true
-      //   },
-      //   score:{
-      //     type: Number,
-      //     required: true
-      //   }
-      // }]
     }],
     tokens: [
         {
@@ -125,9 +115,9 @@ userSchema.methods.generateAuthToken = async function() {
 }
 
 // stored website result
-userSchema.methods.addResult = async function (website, websiteUrl, quesCat, rresult, rvalid, categoryRValid){
+userSchema.methods.addResult = async function (website, websiteUrl, quesCat, rquestionScores, rresult, rvalid, categoryRValid){
     try {
-        this.websites = this.websites.concat({website, websiteUrl, quesCat, rresult, rvalid, categoryRValid})
+        this.websites = this.websites.concat({website, websiteUrl, quesCat, rquestionScores, rresult, rvalid, categoryRValid})
         await this.save();
         return this.websites;
     } catch (error) {

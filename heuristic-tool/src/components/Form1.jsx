@@ -37,9 +37,9 @@ const Form1 = (props) => {
 
   useEffect(() => {
     console.log("Updated userData:", userData);
-    if(userData.categoryRValid){
+    if(userData.rquestionScores){
       (async () => {
-        const {website, websiteUrl, quesCat, rresult, rvalid, categoryRValid, rquestionScores} = userData;
+        const {website, websiteUrl, quesCat, rquestionScores, rresult, rvalid, categoryRValid} = userData;
         try {
           const res = await fetch('/tool', {
             method: "POST",
@@ -47,7 +47,7 @@ const Form1 = (props) => {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              website, websiteUrl, quesCat, rresult, rvalid, categoryRValid, rquestionScores
+              website, websiteUrl, quesCat, rquestionScores, rresult, rvalid, categoryRValid
             })
           });
           const data = await res.json();
@@ -103,7 +103,7 @@ const Form1 = (props) => {
     } else {
       const categoryScores = {};
       const categoryQuestionScores = {};
-      const questionScores = {};
+      let questionScores = [];
       const categoryApplicableCounts = {};
   
       questions.forEach(({qCat, scores}, index) => {
@@ -123,22 +123,23 @@ const Form1 = (props) => {
           categoryQuestionScores[qCat][index] = -1; // add -1 for not applicable options
         }
 
-        questionScores[index] = {
-          category: questions[index].qCat,
-          question: questions[index].question,
-          score: score
-        };
+        // questionScores[index] = questions[index].qCat + " " + questions[index].question + " " + score;
+        questionScores[index] = questions[index].qCat + " " + questions[index].question + " " + score;
+          // category: questions[index].qCat,
+          // question: questions[index].question,
+          // score: score,
+        
       });
       console.log("Question Scores:", questionScores);
-  
+      
       setUserData({
         ...userData,
-        rresult: categoryScores, //category wise score
+        rresult: categoryScores, //category wise score 
         //roverall: newScores, //all questions' individual score
         rvalid: applicable,
         //rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
         categoryRValid: categoryApplicableCounts,
-        //rquestionScores: questionScores
+        rquestionScores: questionScores // new
       });
       
     }
