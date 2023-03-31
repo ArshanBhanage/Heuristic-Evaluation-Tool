@@ -40,7 +40,7 @@ const Profile = (props) => {
   }, [navigate]);
 
  const onSubmit = ((index) => {
-    console.log(index);
+    console.log(index); 
     navigate('/results', { state: { prop1: index } , replace: true});
  });
 

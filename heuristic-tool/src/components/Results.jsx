@@ -12,19 +12,6 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config);
 
-const questions = [
-  {
-    question: "Are product descriptions clear and detailed with high-quality images?",
-    option: "yes",
-    category: "E-Commerce",
-  },
-  {
-    question: "Is the website easy to navigate and find what you're looking for?",
-    option: "no",
-    category: "E-Commerce",
-  },
-];
-
 
 const Results = () => {
   const [resultData, setResultData] = useState({ websites: [] });
@@ -36,38 +23,7 @@ const Results = () => {
   const [feedbacks, setFeedbacks] = useState([]);
 
   useEffect(() => {
-    const generateFeedback = async () => {
-      const results = [];
-
-      for (let i = 0; i < questions.length; i++) {
-        const { question, option, category } = questions[i];
-
-        const prompt =
-          "Question: " +
-          question +
-          " Option selected: " +
-          option +
-          ", Website Category: " +
-          category +
-          ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected ";
-
-        const response = await openai.createCompletion({
-          model: "text-davinci-002",
-          prompt: prompt,
-          max_tokens: 2048,
-          temperature: 0.1,
-        });
-
-        results.push({
-          question: question,
-          feedback: response.data.choices[0].text,
-        });
-      }
-
-      setFeedbacks(results);
-    };
-
-    generateFeedback();
+    
   }, []);
 
   
@@ -82,7 +38,7 @@ const Results = () => {
       margin: 0.5,
       filename: 'mypage.pdf',
       image: { type: 'jpeg', quality: 1 },
-      html2canvas: { dpi: 192, letterRendering: true },
+      html2canvas: { dpi: 300, letterRendering: true },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
       pagebreak: { avoid: ['.pagebreak'] },
     });
@@ -107,6 +63,70 @@ const Results = () => {
     } catch (err) {
       console.log(err);
     }
+    
+    let index = resultData.websites.length-1;
+    console.log("Index from useEffect: ", index);
+  console.log(index);
+  if(props){ 
+    index = props.prop1; 
+    //console.log("My prop", myIndex);
+  }
+  
+  let gptArray = resultData.websites[index];
+
+    let forFeedback = Object.values(gptArray.rquestionScores); 
+    let words = forFeedback.map(string => {
+      let splitWords = string.split(' ');
+      let quesSec = splitWords[0];
+      let userResponse = splitWords[splitWords.length - 1];
+      if(userResponse === "1"){
+        userResponse = "Room for Improvement";
+      }else if(userResponse === "2"){
+        userResponse = "Yes";
+      }else if(userResponse === "0"){
+        userResponse = "No";
+      }else if(userResponse === "-1"){
+        userResponse = "Not Applicable";
+      }
+      let question = splitWords.slice(1, splitWords.length - 1).join(' ');
+      return { quesSec, userResponse, question };
+  });
+
+    const generateFeedback = async () => {
+      const results = [];
+
+      for (let i = 0; i < words.length; i++) {
+        let { question, userResponse, quesSec } = words[i];
+        if(quesSec === "mainquestions"){
+          quesSec = gptArray.quesCat;
+        }
+        const prompt =
+          "Question: " +
+          question +
+          " Option selected: " +
+          userResponse +
+          ", Website Category: " +
+          quesSec +
+          ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected ";
+
+        const response = await openai.createCompletion({
+          model: "text-davinci-002",
+          prompt: prompt,
+          max_tokens: 2048,
+          temperature: 0.1,
+        });
+
+        results.push({
+          question: question,
+          quesSec: quesSec,
+          feedback: response.data.choices[0].text,
+        });
+      }
+
+      setFeedbacks(results);
+    };
+
+    generateFeedback();
   }
 
   useEffect(() => {
@@ -144,6 +164,32 @@ const Results = () => {
       let f = (sectionScores[i] / (catWiseTotalQ[i] * 2) * 100).toFixed(0); 
       catPercent.push(f);
     }
+
+    //gpt
+    //let forFeedback = Object.values(myArray.rquestionScores);
+   
+    //console.log("Role: ", forFeedback);
+    //console.log(("My test: ", testing));
+
+   
+//     let words = forFeedback.map(string => {
+//     let splitWords = string.split(' ');
+//     let quesSec = splitWords[0];
+//     let userResponse = splitWords[splitWords.length - 1];
+//     if(userResponse === "1"){
+//       userResponse = "Room for Improvement";
+//     }else if(userResponse === "2"){
+//       userResponse = "Yes";
+//     }else if(userResponse === "0"){
+//       userResponse = "No";
+//     }else if(userResponse === "-1"){
+//       userResponse = "Not Applicable";
+//     }
+//     let question = splitWords.slice(1, splitWords.length - 1).join(' ');
+//     return { quesSec, userResponse, question };
+// });
+  
+// console.log("My Words: ", words);
 
     return (
       <div className="result-outer">
@@ -196,15 +242,30 @@ const Results = () => {
         <div className='col'>
         {index === 0 ? (
             <p className="card-text">
-              Special content for first section.
+              {feedbacks.filter((feedback) => feedback.quesSec === "E-Commerce").map((feedback, index) => (
+        <div key={index}>
+          <p>{feedback.feedback}</p>
+          <p>{feedback.quesSec}</p>
+        </div>
+      ))}
             </p>
           ) : index === 1 ? (
             <p className="card-text">
-              Special content for second section.
+              {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
+        <div key={index}>
+          <p>{feedback.feedback}</p>
+          <p>{feedback.quesSec}</p>
+        </div>
+      ))}
             </p>
           ) : index === 2 ? (
             <p className="card-text">
-              Special content for third section.
+              {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
+        <div key={index}>
+          <p>{feedback.feedback}</p>
+          <p>{feedback.quesSec}</p>
+        </div>
+      ))}
             </p>
           ) : (
             <p className="card-text">
@@ -224,15 +285,6 @@ const Results = () => {
 
     
       </div>
-      <div>
-      <h1>OpenAI Feedback Generator</h1>
-      {feedbacks.map((feedback, index) => (
-        <div key={index}>
-          <h3>{feedback.question}</h3>
-          <p>{feedback.feedback}</p>
-        </div>
-      ))}
-    </div>
     </div>
     );
   }

@@ -1,11 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom"
-//import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react'
+import html2pdf from 'html2pdf.js';
+import { useNavigate, useLocation } from "react-router-dom"
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+const { Configuration, OpenAIApi } = require("openai");
 
-const Form2 = (props) => {
+const config = new Configuration({
+  organization: "org-dNxmk6KmZAwM7yefcMh2KTqY",
+  apiKey: process.env.React_App_OPENAI,
+});
+
+const openai = new OpenAIApi(config);
+
+
+const Results = () => {
+  const [resultData, setResultData] = useState({ websites: [] });
+  const componentRef = useRef();
   const navigate = useNavigate();
-  //
-  const [userData, setUserData] = useState({name:"", email: "", phone: "", company: "", website: props.websiteName, websiteUrl: props.websiteUrl, quesCat: "E-Learning" });
+  const location = useLocation();
+  const props = location.state;
+
+  const [feedbacks, setFeedbacks] = useState([]);
+
+  useEffect(() => {
+    
+  }, []);
+
+  
+  function handleExit() {
+    navigate('/');
+  }
+
+
+  const handleDownloadPdf = () => {
+    const input = componentRef.current;
+    html2pdf(input, {
+      margin: 0.5,
+      filename: 'mypage.pdf',
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { dpi: 192, letterRendering: true },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+      pagebreak: { avoid: ['.pagebreak'] },
+    });
+  };
 
   const userEvaluator = async () => {
     try {
@@ -21,173 +58,229 @@ const Form2 = (props) => {
         const error = new Error(res.error);
         throw error;
       }
-      setUserData({ ...userData, name: data.name, email: data.email, phone: data.phone, company: data.company });
+      setResultData({ ...resultData, websites: data.websites });
   
     } catch (err) {
       console.log(err);
     }
-  }
-
-
-  //useEffect function is run first when we open a page 
-  // here used to refresh page
-  useEffect(() => {
-      userEvaluator();
     
-  }, []);
-  //
-
-  useEffect(() => {
-    console.log("Updated userData:", userData);
-  }, [userData]);
-
-  const [questions] = useState([
-    { question: "Are product descriptions clear and detailed with high-quality images?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
-    { question: "Do you always know where you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
-    { question: "Can you easily get back to the homepage and the previous page?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
-    { question: "Does the hierarchy of categories/pages make sense to you?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Navigation" },
-
-    { question: "Is the search box visible wherever you are on the site?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
-    { question: "Is the website easy to navigate and find what you are looking for?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
-    { question: "If you enter a misspelled word into the search box, or there are no results to show, does it provide suggestions?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
-    { question: "Are advanced search features available?", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "Search" },
-
-    { question: "A clear status is shown during the loading of any modules and its elements", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    { question: "The interface has a minimal load such that it doesn't interfere with any learner's experience and/or actions", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    { question: "The educational programs are comprehensible and effective enough for the learners compared to the conventional learning means", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    { question: "The service provides a freedom of choice to pause and resume programs at the learner's will along with checkpoints to retain the progress.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    { question: "The site provides a section for learners to hold discussions related to any topics relevant to the provided programs in a systematic and orderly fashion.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    { question: "The programs contain various types of graphical representation in the most effective way to aid in learning experience.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    { question: "A concise summary of modules and units are provided for a quick revision of key points reducing the time usually needed for the same.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    { question: "The service provides a variety of resources to the learners for pursuing further knowledge on the studied units.", options: ["Yes", "Room for improvement", "No", "Not Applicable"], scores: [2, 1, 0, -1], qCat: "mainquestions" },
-    // Add more questions here
-  ]);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [scores, setScores] = useState(Array(questions.length).fill(0));
-  const [selectedOption, setSelectedOption] = useState(null);
+    let index = resultData.websites.length-1;
+    console.log("Index from useEffect: ", index);
+  console.log(index);
+  if(props){ 
+    index = props.prop1; 
+    //console.log("My prop", myIndex);
+  }
   
-  const handleNext = async (e) => {
-    e.preventDefault();
-    const score = questions[currentQuestion].scores[selectedOption];
-    const newScores = [...scores];
-    let applicable = 0;
-    let notApplicable = 0;
-    newScores[currentQuestion] = score;
-  
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedOption(null);
-    } else {
-      const categoryScores = {};
-      const categoryQuestionScores = {};
-      const categoryApplicableCounts = {};
-  
-      questions.forEach(({qCat, scores}, index) => {
-        if (!categoryScores[qCat]) {
-          categoryScores[qCat] = 0;
-          categoryQuestionScores[qCat] = Array(scores.length).fill(0);
-          categoryApplicableCounts[qCat] = 0;
-        }
-  
-        const score = newScores[index];
-        if (score >= 0) {
-          categoryScores[qCat] += score;
-          categoryQuestionScores[qCat][index] = score;
-          categoryApplicableCounts[qCat]++;
-          applicable++;
-        } else {
-          notApplicable++;
-          categoryQuestionScores[qCat][index] = -1; // add -1 for not applicable options
-        }
-      });
-      console.log("Category applicable counts:", categoryApplicableCounts);
-  
-      setUserData({
-        ...userData,
-        rresult: categoryScores, //category wise score
-        roverall: newScores, //all questions' individual score
-        rvalid: applicable,
-        rinvalid: notApplicable,
-        rquestionScores: categoryQuestionScores, //scores for each individual question in qCat
-        categoryRValid: categoryApplicableCounts
-      });
+  let gptArray = resultData.websites[index];
 
-      const {name, email , website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid} = userData;
-      try {
-        const res = await fetch('/tool', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name, email , website, websiteUrl, quesCat, rresult, roverall, rvalid, rinvalid, rquestionScores, categoryRValid
-          })
-        });
-        const data = await res.json();
-        if(!data){
-          console.log("data not updated");
-        }else{
-          alert("evaluated website successfully and stored data to db");
-          //setUserData({...userData, website: "", websiteUrl: "", rresult:{}, roverall: [], rvalid: 0, rinvalid: 0, rquestionScores: {}});
-          //navigate('/results', {replace: true});
-          
-                   
-        }
-      } catch (error) {
-        console.error(error);
+    let forFeedback = Object.values(gptArray.rquestionScores); 
+    let words = forFeedback.map(string => {
+      let splitWords = string.split(' ');
+      let quesSec = splitWords[0];
+      let userResponse = splitWords[splitWords.length - 1];
+      if(userResponse === "1"){
+        userResponse = "Room for Improvement";
+      }else if(userResponse === "2"){
+        userResponse = "Yes";
+      }else if(userResponse === "0"){
+        userResponse = "No";
+      }else if(userResponse === "-1"){
+        userResponse = "Not Applicable";
       }
-      
+      let question = splitWords.slice(1, splitWords.length - 1).join(' ');
+      return { quesSec, userResponse, question };
+  });
+
+    const generateFeedback = async () => {
+      const results = [];
+
+      for (let i = 0; i < words.length; i++) {
+        const { question, userResponse, quesSec } = words[i];
+
+        const prompt =
+          "Question: " +
+          question +
+          " Option selected: " +
+          userResponse +
+          ", Website Category: " +
+          quesSec +
+          ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected ";
+
+        const response = await openai.createCompletion({
+          model: "text-davinci-002",
+          prompt: prompt,
+          max_tokens: 2048,
+          temperature: 0.1,
+        });
+
+        results.push({
+          question: question,
+          feedback: response.data.choices[0].text,
+        });
+      }
+
+      setFeedbacks(results);
+    };
+
+    generateFeedback();
+  }
+
+  useEffect(() => {
+    userEvaluator();
+  }, []);
+
+  if (resultData.websites.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+  
+  let myIndex = resultData.websites.length-1;
+  console.log(myIndex);
+  if(props){
+    myIndex = props.prop1;
+    console.log("My prop", myIndex);
+  }
+  
+  let myArray = resultData.websites[myIndex];  
+  console.log("myArray", myArray);
+
+  if (myArray !== undefined) {
+    const overAlll = myArray.rresult;
+    const overAll = Object.values(overAlll);
+    const sum = overAll.reduce((acc, curr) => curr >= 0 ? acc + curr : acc, 0);
+    const totalOverAllMarks = myArray.rvalid * 2;
+    const overAllPercent = (sum / totalOverAllMarks * 100).toFixed(0);
+
+    let section = Object.keys(myArray.rresult);
+    let sectionScores = Object.values(myArray.rresult);
+    let catWiseTotalQ = Object.values(myArray.categoryRValid);
+    let catPercent = [];
+
+    for(let i = 0; i < sectionScores.length; i++){
+      let f = (sectionScores[i] / (catWiseTotalQ[i] * 2) * 100).toFixed(0); 
+      catPercent.push(f);
     }
+
+    //gpt
+    //let forFeedback = Object.values(myArray.rquestionScores);
+   
+    //console.log("Role: ", forFeedback);
+    //console.log(("My test: ", testing));
+
+   
+//     let words = forFeedback.map(string => {
+//     let splitWords = string.split(' ');
+//     let quesSec = splitWords[0];
+//     let userResponse = splitWords[splitWords.length - 1];
+//     if(userResponse === "1"){
+//       userResponse = "Room for Improvement";
+//     }else if(userResponse === "2"){
+//       userResponse = "Yes";
+//     }else if(userResponse === "0"){
+//       userResponse = "No";
+//     }else if(userResponse === "-1"){
+//       userResponse = "Not Applicable";
+//     }
+//     let question = splitWords.slice(1, splitWords.length - 1).join(' ');
+//     return { quesSec, userResponse, question };
+// });
+  
+// console.log("My Words: ", words);
+
+    return (
+      <div className="result-outer">
+
+      <div className="row">
+        <h3>{resultData.websites[myIndex].website}</h3>
+      </div>
+      <div className="row" style={{marginBottom: "3%"}}>
+        <h3>{resultData.websites[myIndex].websiteUrl}</h3>
+      </div>
+      <div className="row">
+        <div className="col">
+          <button className="btn btn-warning" onClick={handleExit}>Exit</button>
+        </div>
+        <div className="col">
+          <button className="btn btn-success" onClick={handleDownloadPdf}>Download PDF</button>
+        </div>
+      </div>
     
-    setScores(newScores);
-  };
-  
-
-  
-  const handlePrevious = (e) => {
-    e.preventDefault();
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-      setSelectedOption(null);
-    } else {
-      // Handle beginning of quiz
-    }
-  }
-
-  const handleOptionClick = (index) => {
-    setSelectedOption(index);
-  }
-  
-  return (
-    <>
-    <div style={{marginLeft: "6%"}}><h2>{props.websiteName} | {props.websiteUrl}</h2></div>
-    <div className="quiz-container col-md-auto ">
-      <form method='POST' onSubmit={handleNext}><br />
-        <h4>{questions[currentQuestion].qCat}</h4><hr></hr><br />
-        <div className='que-cont'> <h4 className="h3-gap">{currentQuestion + 1}.{questions[currentQuestion].question}</h4> </div>
-        <div className="container">
-          <div className="row g-6" style={{marginTop: "2%"}}>
-            {questions[currentQuestion].options.map((option, index) => (
-              <div className={`col-sm ${selectedOption === index ? 'selected' : ''}`} onClick={() => handleOptionClick(index)} key={index}>
-                  <span>{option}</span>
-                
+      <div ref={componentRef}>
+        <div className="card-name text-dark bg-light mb-3">
+          <div className="card-body-r">
+            <div className="row align-items-start">
+              <div className="col" style={{marginBottom: "3%"}}>
+                <h3 className="card-title">Overall Score:</h3>
+                <p className="card-text">
+                  Overall the website reviewed scored well in this heuristic evaluation.
+                  This means that the majority of important UX elements were in place and working well. However, there is still room for improvement as any one of the areas reviewed could make a big impact on the performance of your business.
+                  It is best to review the below information to understand the specific areas or themes that still require improvement. From this you can draw up a list of things to improve. Consider elements which are at the beginning of the journey as higher priority. You can then reassess your website by doing another heuristic evaluation once the improvements have been made.
+                </p>
               </div>
-            ))}
+              <div className="col">
+                <div className="circular-pro" style={{ width: '200px' }}>
+                  <CircularProgressbar  value={overAllPercent} text={`${overAllPercent}%`} strokeWidth={5} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-  <hr />
-        <div className='flex' style={{ display: "flex"}}>
-          <div className='option-container'>
-            {currentQuestion > 0 && <button className='btn btn-outline-secondary' type="button" onClick={handlePrevious}>Previous</button>}
-          </div>
-          <div className='option-container'>
-            <button className='btn btn-outline-success' type="submit" disabled={selectedOption === null}>{currentQuestion < questions.length - 1 ? "Save & Next" : "Submit"}</button>
+    
+        {section.map((sectionName, index) => (
+  <div key={index} className="card-name text-dark bg-light mb-3">
+    <div className="card-body-r">
+    {index === 0 ? (
+        <h3 className="card-title">{resultData.websites[myIndex].quesCat}</h3>
+      ) : (
+        <h3 className="card-title">{sectionName}</h3>
+      )}
+      <div className='row'>
+        <div className='col'>
+        {index === 0 ? (
+            <p className="card-text">
+              Special content for first section.
+            </p>
+          ) : index === 1 ? (
+            <p className="card-text">
+              Special content for second section.
+            </p>
+          ) : index === 2 ? (
+            <p className="card-text">
+              Special content for third section.
+            </p>
+          ) : (
+            <p className="card-text">
+              Default content for all other sections.
+            </p>
+          )}
+        </div>
+        <div className='col'>
+          <div className="circular-pro" style={{ width: '160px' }}>
+            <CircularProgressbar value={catPercent[index]} text={`${catPercent[index]}%`} strokeWidth={5} />
           </div>
         </div>
-      </form>
+      </div>
     </div>
-    </>
-  );
+  </div>
+))}
+
+    
+      </div>
+      <div>
+      <h1>OpenAI Feedback Generator</h1>
+      {feedbacks.map((feedback, index) => (
+        <div key={index}>
+          <h3>{feedback.question}</h3>
+          <p>{feedback.feedback}</p>
+        </div>
+      ))}
+    </div>
+    </div>
+    );
+  }
+
+  return null;
 }
 
-export default Form2;
+export default Results;
