@@ -23,7 +23,7 @@ const Results = () => {
   const [feedbacks, setFeedbacks] = useState([]);
 
   useEffect(() => {
-    
+    userEvaluator();
   }, []);
 
   
@@ -43,8 +43,9 @@ const Results = () => {
       pagebreak: { avoid: ['.pagebreak'] },
     });
   };
-
+ 
   const userEvaluator = async () => {
+    const fetchData = async () => {
     try {
       const res = await fetch('/getData', {
         method: "GET",
@@ -53,85 +54,95 @@ const Results = () => {
         },
       });
       const data = await res.json();
-      console.log(data);
+       console.log(data);
+       //
+
+       let index = data.websites.length-1;
+  
+       console.log("Index from useEffect: ", index);
+   console.log(index);
+   if(props){ 
+     index = props.prop1; 
+     //console.log("My prop", myIndex);
+   }
+   
+   let gptArray = data.websites[index];
+     
+     let forFeedback =  Object.values(gptArray.rquestionScores);
+     let words = forFeedback.map(string => {
+       let splitWords = string.split(' '); 
+       let quesSec = splitWords[0];
+       let userResponse = splitWords[splitWords.length - 1];
+       if(userResponse === "1"){
+         userResponse = "Room for Improvement";
+       }else if(userResponse === "2"){
+         userResponse = "Yes";
+       }else if(userResponse === "0"){
+         userResponse = "No";
+       }else if(userResponse === "-1"){
+         userResponse = "Not Applicable";
+       }
+       let question = splitWords.slice(1, splitWords.length - 1).join(' ');
+       return { quesSec, userResponse, question };
+   });
+   
+     const generateFeedback = async () => {
+       
+       const results = [];
+   
+       for (let i = 0; i < words.length; i++) {
+         let { question, userResponse, quesSec } = words[i]; 
+         if(quesSec === "mainquestions"){
+           quesSec = gptArray.quesCat;
+         }
+         const prompt =
+           "Question: " +
+           question + 
+           " Option selected: " + 
+           userResponse +
+           ", Website Category: " +
+           quesSec +
+           ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected ";
+   
+         const response = await openai.createCompletion({
+           model: "text-davinci-002",
+           prompt: prompt,
+           max_tokens: 1024,
+           temperature: 0.1,
+         });
+   
+         results.push({
+           question: question,
+           quesSec: quesSec,
+           feedback: response.data.choices[0].text,
+         });
+       }
+   
+       setFeedbacks(results);
+     };
+   
+     
+     generateFeedback();
+   
+
+       //
       if (res.status !== 200) {
         const error = new Error(res.error);
         throw error;
       }
-      setResultData({ ...resultData, websites: data.websites });
+     setResultData({ ...resultData, websites: data.websites });
+     
+     console.log(resultData); 
   
     } catch (err) {
       console.log(err);
-    }
+    } 
+  }
+   await fetchData();
     
-    let index = resultData.websites.length-1;
-    console.log("Index from useEffect: ", index);
-  console.log(index);
-  if(props){ 
-    index = props.prop1; 
-    //console.log("My prop", myIndex);
-  }
-  
-  let gptArray = resultData.websites[index];
-
-    let forFeedback = Object.values(gptArray.rquestionScores); 
-    let words = forFeedback.map(string => {
-      let splitWords = string.split(' ');
-      let quesSec = splitWords[0];
-      let userResponse = splitWords[splitWords.length - 1];
-      if(userResponse === "1"){
-        userResponse = "Room for Improvement";
-      }else if(userResponse === "2"){
-        userResponse = "Yes";
-      }else if(userResponse === "0"){
-        userResponse = "No";
-      }else if(userResponse === "-1"){
-        userResponse = "Not Applicable";
-      }
-      let question = splitWords.slice(1, splitWords.length - 1).join(' ');
-      return { quesSec, userResponse, question };
-  });
-
-    const generateFeedback = async () => {
-      const results = [];
-
-      for (let i = 0; i < words.length; i++) {
-        let { question, userResponse, quesSec } = words[i];
-        if(quesSec === "mainquestions"){
-          quesSec = gptArray.quesCat;
-        }
-        const prompt =
-          "Question: " +
-          question +
-          " Option selected: " +
-          userResponse +
-          ", Website Category: " +
-          quesSec +
-          ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected ";
-
-        const response = await openai.createCompletion({
-          model: "text-davinci-002",
-          prompt: prompt,
-          max_tokens: 2048,
-          temperature: 0.1,
-        });
-
-        results.push({
-          question: question,
-          quesSec: quesSec,
-          feedback: response.data.choices[0].text,
-        });
-      }
-
-      setFeedbacks(results);
-    };
-
-    generateFeedback();
+    
   }
 
-  useEffect(() => {
-    userEvaluator();
-  }, []);
 
   if (resultData.websites.length === 0) {
     return <div>Loading...</div>;
@@ -146,7 +157,7 @@ const Results = () => {
   }
   
   let myArray = resultData.websites[myIndex];  
-  console.log("myArray", myArray);
+  // console.log("myArray", myArray);
 
   if (myArray !== undefined) {
     const overAlll = myArray.rresult;
@@ -165,31 +176,8 @@ const Results = () => {
       catPercent.push(f);
     }
 
-    //gpt
-    //let forFeedback = Object.values(myArray.rquestionScores);
-   
-    //console.log("Role: ", forFeedback);
-    //console.log(("My test: ", testing));
 
-   
-//     let words = forFeedback.map(string => {
-//     let splitWords = string.split(' ');
-//     let quesSec = splitWords[0];
-//     let userResponse = splitWords[splitWords.length - 1];
-//     if(userResponse === "1"){
-//       userResponse = "Room for Improvement";
-//     }else if(userResponse === "2"){
-//       userResponse = "Yes";
-//     }else if(userResponse === "0"){
-//       userResponse = "No";
-//     }else if(userResponse === "-1"){
-//       userResponse = "Not Applicable";
-//     }
-//     let question = splitWords.slice(1, splitWords.length - 1).join(' ');
-//     return { quesSec, userResponse, question };
-// });
-  
-// console.log("My Words: ", words);
+    
 
     return (
       <div className="result-outer">
@@ -244,8 +232,8 @@ const Results = () => {
             <p className="card-text">
               {feedbacks.filter((feedback) => feedback.quesSec === "E-Commerce").map((feedback, index) => (
         <div key={index}>
-          <p>{feedback.feedback}</p>
-          <p>{feedback.quesSec}</p>
+          <h6>{feedback.feedback}</h6>
+          
         </div>
       ))}
             </p>
@@ -253,8 +241,7 @@ const Results = () => {
             <p className="card-text">
               {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
         <div key={index}>
-          <p>{feedback.feedback}</p>
-          <p>{feedback.quesSec}</p>
+          <h6>{feedback.feedback}</h6>
         </div>
       ))}
             </p>
@@ -262,8 +249,7 @@ const Results = () => {
             <p className="card-text">
               {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
         <div key={index}>
-          <p>{feedback.feedback}</p>
-          <p>{feedback.quesSec}</p>
+          <h6>{feedback.feedback}</h6>
         </div>
       ))}
             </p>
