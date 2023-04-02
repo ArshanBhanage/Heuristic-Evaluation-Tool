@@ -50,6 +50,7 @@
 .card-text{
     margin-top: 2%;
     margin-left: 5%;
+    text-align: justify;
 }
 
 .card-title{
@@ -60,3 +61,24 @@
     width: 50%;
     height: 100%;
 }
+
+.red {
+    color: red;
+  }
+  
+  .yellow {
+    color: yellow;
+  }
+  
+  .green {
+    color: green;
+  }
+  
+  .material-symbols-outlined {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .result-section-name{
+    margin-left: 3%;
+  }

@@ -19,7 +19,7 @@ const Profile = (props) => {
         },
         withCredentials: true
         });
-        console.log(JSON.stringify(res.data));
+        //console.log(JSON.stringify(res.data));
         setUserData((res.data.websites));
 
         if(res.status !== 200){

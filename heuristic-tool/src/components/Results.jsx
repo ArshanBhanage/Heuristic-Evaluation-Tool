@@ -13,6 +13,7 @@ const config = new Configuration({
 const openai = new OpenAIApi(config);
 
 
+
 const Results = () => {
   const [resultData, setResultData] = useState({ websites: [] });
   const componentRef = useRef();
@@ -63,29 +64,30 @@ const Results = () => {
    console.log(index);
    if(props){ 
      index = props.prop1; 
-     //console.log("My prop", myIndex);
    }
    
    let gptArray = data.websites[index];
      
-     let forFeedback =  Object.values(gptArray.rquestionScores);
-     let words = forFeedback.map(string => {
-       let splitWords = string.split(' '); 
-       let quesSec = splitWords[0];
-       let userResponse = splitWords[splitWords.length - 1];
-       if(userResponse === "1"){
-         userResponse = "Room for Improvement";
-       }else if(userResponse === "2"){
-         userResponse = "Yes";
-       }else if(userResponse === "0"){
-         userResponse = "No";
-       }else if(userResponse === "-1"){
-         userResponse = "Not Applicable";
-       }
-       let question = splitWords.slice(1, splitWords.length - 1).join(' ');
-       return { quesSec, userResponse, question };
-   });
+   let forFeedback = Object.values(gptArray.rquestionScores);
+   let words = forFeedback.reduce((acc, string) => {
+     let splitWords = string.split(' ');
+     let quesSec = splitWords[0];
+     let userResponse = splitWords[splitWords.length - 1];
+     if (userResponse === '1') {
+       userResponse = 'Room for Improvement';
+     } else if (userResponse === '0') {
+       userResponse = 'No';
+     } else if (userResponse === '-1') {
+       userResponse = 'Not Applicable';
+     } else {
+       return acc; // skip "Yes" responses
+     }
+     let question = splitWords.slice(1, splitWords.length - 1).join(' ');
+     acc.push({ quesSec, userResponse, question });
+     return acc;
+   }, []);
    
+
      const generateFeedback = async () => {
        
        const results = [];
@@ -102,7 +104,7 @@ const Results = () => {
            userResponse +
            ", Website Category: " +
            quesSec +
-           ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected ";
+           ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected and provide ways to improve and dont mention the category in result";
    
          const response = await openai.createCompletion({
            model: "text-davinci-002",
@@ -210,7 +212,7 @@ const Results = () => {
                 </p>
               </div>
               <div className="col">
-                <div className="circular-pro" style={{ width: '200px' }}>
+                <div className="circular-pro" style={{ width: '40%' }}>
                   <CircularProgressbar  value={overAllPercent} text={`${overAllPercent}%`} strokeWidth={5} />
                 </div>
               </div>
@@ -221,18 +223,22 @@ const Results = () => {
         {section.map((sectionName, index) => (
   <div key={index} className="card-name text-dark bg-light mb-3">
     <div className="card-body-r">
+      <div className='row'>
+        <div className='col-8'>
+        <div className='result-section-name'>
     {index === 0 ? (
         <h3 className="card-title">{resultData.websites[myIndex].quesCat}</h3>
       ) : (
         <h3 className="card-title">{sectionName}</h3>
       )}
-      <div className='row'>
-        <div className='col'>
+    </div>
         {index === 0 ? (
             <p className="card-text">
-              {feedbacks.filter((feedback) => feedback.quesSec === "E-Commerce").map((feedback, index) => (
+              {feedbacks.filter((feedback) => feedback.quesSec === "E-Commerce" ).map((feedback, index) => (
         <div key={index}>
-          <h6>{feedback.feedback}</h6>
+          <p><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</p>
           
         </div>
       ))}
@@ -241,7 +247,7 @@ const Results = () => {
             <p className="card-text">
               {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
         <div key={index}>
-          <h6>{feedback.feedback}</h6>
+          <p>{feedback.feedback}</p>
         </div>
       ))}
             </p>
@@ -249,7 +255,7 @@ const Results = () => {
             <p className="card-text">
               {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
         <div key={index}>
-          <h6>{feedback.feedback}</h6>
+          <p>{feedback.feedback}</p>
         </div>
       ))}
             </p>
@@ -260,7 +266,7 @@ const Results = () => {
           )}
         </div>
         <div className='col'>
-          <div className="circular-pro" style={{ width: '160px' }}>
+          <div className="circular-pro" style={{ width: '50%' }}>
             <CircularProgressbar value={catPercent[index]} text={`${catPercent[index]}%`} strokeWidth={5} />
           </div>
         </div>

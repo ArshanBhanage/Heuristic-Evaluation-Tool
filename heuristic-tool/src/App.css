@@ -50,8 +50,8 @@
   height: fit-content;
 }
 
-.login{
-}
+/* .login{
+} */
 
 .signupcontainer{
   box-shadow:  0 0 15px rgb(214, 103, 127);
@@ -115,3 +115,4 @@ a {
   text-align: center;
   font-weight: bolder;
 }
+
