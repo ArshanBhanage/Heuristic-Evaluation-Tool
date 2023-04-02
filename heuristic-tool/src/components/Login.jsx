@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { UserContext } from "../App"; 
 
 const Login = () => {
   
+  //reducer
+  const {state, dispatch} = useContext(UserContext);
+  //
+
   const navigate = useNavigate();
   const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState(''); 
@@ -25,6 +31,7 @@ const Login = () => {
      if(res.status === 400 || !data){
       window.alert("Invalid Credentials");
      }else{
+      dispatch({type: "USER", payload: true})
       window.alert("Login Success");
       navigate('/' , { replace: true });
      }

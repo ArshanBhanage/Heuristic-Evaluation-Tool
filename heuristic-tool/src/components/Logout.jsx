@@ -1,9 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext, useReducer } from 'react'
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
+import { UserContext } from "../App"; 
+
 const Logout = () => {
     
+ //reducer
+ const {state, dispatch} = useContext(UserContext);
+ //
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -14,7 +20,8 @@ const Logout = () => {
               },
               withCredentials: true
         }).then((res) => {
-            navigate('/logout', { replace: true });
+            dispatch({type: "USER", payload: false})
+            navigate('/login', { replace: true });
             if(res.status !== 200){
                 const error = new Error(res.error);
                 throw error;

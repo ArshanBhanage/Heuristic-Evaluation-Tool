@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useReducer, createContext } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 //import App css
 import "./App.css"
@@ -23,12 +23,13 @@ import OpenAiFeedback from './components/OpenAiFeedback'
 //components
 
 import { Routes, Route } from 'react-router-dom';
+import {initialState, reducer} from "../src/reducer/UseReducer";
 
 
-const App = () => {
-  return (
-    <>
-    <Navbar/>
+export const UserContext = createContext();
+
+const Routing = () => {
+  return(
     <Routes>
     <Route path='/' element={<Home/>} />
     <Route path='/about' element={<About/>} />
@@ -41,6 +42,18 @@ const App = () => {
     <Route path='/logout' element={<Logout/>} />
     <Route path='/openai' element={<OpenAiFeedback/>} />
     </Routes>
+  );
+}
+
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <>
+    <UserContext.Provider value = {{state, dispatch}}>
+    <Navbar/>
+    <Routing/>
+    </UserContext.Provider>
     </>
   )
 }
