@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Form1 from './Form1';
 import Form2 from './Form2';
+import backgroundImage from '../images/design1.jpg';
 
 const Evaluator = () => {
   const [selectedFormTmp, setSelectedFormTmp] = useState("");
@@ -18,8 +19,10 @@ const Evaluator = () => {
     setShowCard(false);
   }
 
+
   return (
-    <div className='web-name'>
+    <div className='web-name' >
+      {/* style={{background: `url(${backgroundImage}) repeat`, opacity:"0.9"}} */}
       {showCard && (
         <div className="card" style={{width: "50%"}}>
           <div className="card-body">

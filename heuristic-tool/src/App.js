@@ -24,7 +24,11 @@ import OpenAiFeedback from './components/OpenAiFeedback'
 
 import { Routes, Route } from 'react-router-dom';
 import {initialState, reducer} from "../src/reducer/UseReducer";
+// import backgroundImage from './images/design1.jpg';
 
+// const backgroundStyle = {
+//   background: `url(${backgroundImage}) repeat`,
+// };
 
 export const UserContext = createContext();
 
@@ -50,10 +54,12 @@ const App = () => {
 
   return (
     <>
+    {/* <div style={backgroundStyle}> */}
     <UserContext.Provider value = {{state, dispatch}}>
     <Navbar/>
     <Routing/>
     </UserContext.Provider>
+    {/* </div> */}
     </>
   )
 }
