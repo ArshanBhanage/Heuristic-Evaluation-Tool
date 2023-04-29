@@ -49,15 +49,22 @@ const Profile = (props) => {
       <div className="container-profile">
         {userData.map((user, index) => (
           <div key={index} className="card-name-profile text-dark bg-light mb-3">
-            <div className="card-body-r">
+            <div className="card-body-r text-center">
               <div className='row'>
                 <div className='col' style={{ marginTop: '2%', marginBottom: '2%' }}>
                   <h4>Website Name: {user.website}</h4>
                   <h6>Website Url: {user.websiteUrl}</h6>
                 </div>
               </div>
-              <button className='btn btn-success' type="submit" onClick={() => onSubmit(index)}>View Result</button>
-              <button className='btn btn-danger' type="submit">Delete</button>
+              <div className='row' style={{width: "90%" , paddingLeft: "30%", paddingRight: "15%"}}>
+                <div className='col'>
+                  <button className='btn btn-success ' type="submit" onClick={() => onSubmit(index)}>View Result</button>
+                </div>
+                <div className='col'>
+                <button className='btn btn-danger' type="submit">Delete</button>
+                </div>
+              </div>
+
             </div>
           </div>
         ))}

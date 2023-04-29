@@ -3,6 +3,13 @@ import html2pdf from 'html2pdf.js';
 import { useNavigate, useLocation } from "react-router-dom"
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import Backtotop from './Backtotop';
+// import backgroundImage from '../images/design1.jpg';
+
+// const backgroundStyle = {
+//   background: `url(${backgroundImage}) repeat`,
+// };
+
 const { Configuration, OpenAIApi } = require("openai");
 
 const config = new Configuration({
@@ -14,12 +21,14 @@ const openai = new OpenAIApi(config);
 
 
 
+
 const Results = () => {
   const [resultData, setResultData] = useState({ websites: [] });
   const componentRef = useRef();
   const navigate = useNavigate();
   const location = useLocation();
   const props = location.state;
+
 
   const [feedbacks, setFeedbacks] = useState([]);
 
@@ -77,8 +86,6 @@ const Results = () => {
        userResponse = 'Room for Improvement';
      } else if (userResponse === '0') {
        userResponse = 'No';
-     } else if (userResponse === '-1') {
-       userResponse = 'Not Applicable';
      } else {
        return acc; // skip "Yes" responses
      }
@@ -91,11 +98,13 @@ const Results = () => {
      const generateFeedback = async () => {
        
        const results = [];
+       let donts = "dont mention the category in result, dont give fullstops before start of the sentence, dont mention Ben Schneiderman and Jakob Nielsen in feedback.";
    
        for (let i = 0; i < words.length; i++) {
          let { question, userResponse, quesSec } = words[i]; 
-         if(quesSec === "mainquestions"){
+         if(quesSec === "amainquestions"){
            quesSec = gptArray.quesCat;
+           console.log(quesSec);
          }
          const prompt =
            "Question: " +
@@ -104,7 +113,7 @@ const Results = () => {
            userResponse +
            ", Website Category: " +
            quesSec +
-           ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, you are an evaluator ,give proper feedback to the question and option selected and provide ways to improve and dont mention the category in result";
+           ", Based on Ben Schneiderman's golden rules and Jakob Nielsen's heuristics combined, give feedback to the question and option selected and provide ways to improve and also tell how that feature can be implemented if no is selected , " + donts;
    
          const response = await openai.createCompletion({
            model: "text-davinci-002",
@@ -119,10 +128,10 @@ const Results = () => {
            feedback: response.data.choices[0].text,
          });
        }
-   
+       console.log(results);
        setFeedbacks(results);
      };
-   
+     
      
      generateFeedback();
    
@@ -170,20 +179,25 @@ const Results = () => {
 
     let section = Object.keys(myArray.rresult);
     let sectionScores = Object.values(myArray.rresult);
+    console.log("Section scores: ", sectionScores);
     let catWiseTotalQ = Object.values(myArray.categoryRValid);
+    console.log("Category wise valid q: ", catWiseTotalQ);
     let catPercent = [];
 
     for(let i = 0; i < sectionScores.length; i++){
       let f = (sectionScores[i] / (catWiseTotalQ[i] * 2) * 100).toFixed(0); 
       catPercent.push(f);
     }
+    console.log(catPercent);
 
 
     
 
     return (
+      <>
+      {/* <div style={backgroundStyle}> */}
       <div className="result-outer">
-
+        
       <div className="row">
         <h3>{resultData.websites[myIndex].website}</h3>
       </div>
@@ -205,11 +219,11 @@ const Results = () => {
             <div className="row align-items-start">
               <div className="col" style={{marginBottom: "3%"}}>
                 <h3 className="card-title">Overall Score:</h3>
-                <p className="card-text">
+                <h5 className='card-text' style={{fontWeight: "initial"}}>
                   Overall the website reviewed scored well in this heuristic evaluation.
                   This means that the majority of important UX elements were in place and working well. However, there is still room for improvement as any one of the areas reviewed could make a big impact on the performance of your business.
                   It is best to review the below information to understand the specific areas or themes that still require improvement. From this you can draw up a list of things to improve. Consider elements which are at the beginning of the journey as higher priority. You can then reassess your website by doing another heuristic evaluation once the improvements have been made.
-                </p>
+                </h5>
               </div>
               <div className="col">
                 <div className="circular-pro" style={{ width: '40%' }}>
@@ -232,38 +246,122 @@ const Results = () => {
         <h3 className="card-title">{sectionName}</h3>
       )}
     </div>
-        {index === 0 ? (
-            <p className="card-text">
-              {feedbacks.filter((feedback) => feedback.quesSec === "E-Commerce" ).map((feedback, index) => (
+    {index === 0 && resultData.websites[myIndex].quesCat === "E-Learning" ? (
+  // E-Learning feedbacks rendering
+<h6 className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === "E-Learning" ).map((feedback, index) => (
         <div key={index}>
-          <p><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
 warning
-</span>{feedback.feedback}</p>
+</span>{feedback.feedback}</h5><br/>
           
         </div>
       ))}
-            </p>
-          ) : index === 1 ? (
-            <p className="card-text">
-              {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
+            </h6>
+) : index === 0 && resultData.websites[myIndex].quesCat === "E-Commerce" ? (
+  // E-Learning feedbacks rendering
+<h6 className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === "E-Commerce" ).map((feedback, index) => (
         <div key={index}>
-          <p>{feedback.feedback}</p>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
+          
+        </div>
+      ))}
+            </h6>
+) : index === 1 ? (
+  // Feedbacks rendering for index 1
+<p className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === "First").map((feedback, index) => (
+        <div key={index}>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
         </div>
       ))}
             </p>
-          ) : index === 2 ? (
-            <p className="card-text">
+) : index === 2 ? (
+  // Feedbacks rendering for index 2
+<p className="card-text">
               {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
         <div key={index}>
-          <p>{feedback.feedback}</p>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
         </div>
       ))}
             </p>
-          ) : (
-            <p className="card-text">
+) : index === 3 ? (
+  // Feedbacks rendering for index 2
+<p className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
+        <div key={index}>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
+        </div>
+      ))}
+            </p>
+): index === 4 ? (
+  // E-Learning feedbacks rendering
+<p className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
+        <div key={index}>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
+        </div>
+      ))}
+            </p>
+) : index === 5 ? (
+  // Feedbacks rendering for index 2
+<p className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
+        <div key={index}>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
+        </div>
+      ))}
+            </p>
+): index === 6 ? (
+  // Feedbacks rendering for index 2
+<p className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === sectionName).map((feedback, index) => (
+        <div key={index}>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
+        </div>
+      ))}
+            </p>
+): index === 7 ? (
+  // Feedbacks rendering for index 2
+<p className="card-text">
+              {feedbacks.filter((feedback) => feedback.quesSec === "Trust").map((feedback, index) => (
+        <div key={index}>
+          <h5>Q: {feedback.question}</h5>
+          <h5 style={{fontWeight: "initial"}}><span className="material-symbols-outlined" style={{color: 'yellowgreen'}}>
+warning
+</span>{feedback.feedback}</h5><br/>
+        </div>
+      ))}
+            </p>
+) : (
+  // Default content for all other sections
+<p className="card-text">
               Default content for all other sections.
             </p>
-          )}
+)}
         </div>
         <div className='col'>
           <div className="circular-pro" style={{ width: '50%' }}>
@@ -274,10 +372,12 @@ warning
     </div>
   </div> 
 ))}
-
     
-      </div>
-    </div>
+      </div>      
+<Backtotop />
+    </div> 
+    {/* </div> */}
+    </>
     );
   }
 

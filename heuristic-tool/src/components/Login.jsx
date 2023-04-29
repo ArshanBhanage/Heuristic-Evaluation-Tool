@@ -40,7 +40,7 @@ const Login = () => {
   return (
     <>
       <section className="login">
-        <div className="signupcontainer mt-5">
+        <div className="signupcontainer mt-5"  style={{ backgroundColor: '#fff' }}>
           <form method="POST" className="signup-content">
             <div className="container" margin-top="10px">
               <div className="row">

@@ -49,25 +49,63 @@ const userSchema = new mongoose.Schema({
         required: true
       }],
       rresult: {
-        mainquestions: {
+        amainquestions: {
+          type: Number,
+          required: true
+        },
+        "First Impression": {
+          type: Number,
+          required: true
+        },
+        Forms: {
+          type: Number,
+          required: true
+        },
+        Information: {
+          type: Number,
+          required: true
+        },
+        Interaction: {
           type: Number,
           required: true
         },
         Navigation: {
           type: Number,
           required: true
-        },
+        }, 
         Search: {
           type: Number,
           required: true
-        }
+        },
+        
+        "Trust and Persuasion": {
+          type: Number,
+          required: true
+        }     
+        
       },
       rvalid: {
         type: Number,
         required: true
       },
       categoryRValid: {
-        mainquestions: {
+        amainquestions: {
+          type: Number,
+          required: true
+        },
+        "First Impression": {
+          type: Number,
+          required: true
+        },
+        Forms: {
+          type: Number,
+          required: true
+        },
+        Information: {
+          type: Number,
+          required: true
+        },
+        Interaction: {
           type: Number,
           required: true
         },
@@ -78,7 +116,12 @@ const userSchema = new mongoose.Schema({
         Search: {
           type: Number,
           required: true
-        }
+        },
+        
+        "Trust and Persuasion": {
+          type: Number,
+          required: true
+        } 
       },
     }],
     tokens: [
