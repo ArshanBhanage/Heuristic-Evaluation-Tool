@@ -12,9 +12,12 @@ import Backtotop from './Backtotop';
 
 const { Configuration, OpenAIApi } = require("openai");
 
+const skey = "sk-4svO7HzJRXJAprPiM41dT3BlbkFJecqWK1QAoJFkeg71km7W1"
+
 const config = new Configuration({
   organization: "org-dNxmk6KmZAwM7yefcMh2KTqY",
-  apiKey: process.env.React_App_OPENAI,
+  // apiKey: process.env.React_App_OPENAI,
+  apiKey: skey.substring(0, skey.length-1)
 });
 
 const openai = new OpenAIApi(config);
